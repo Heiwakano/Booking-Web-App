@@ -4,18 +4,32 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  SET_EMAIL,
+  SET_OTP,
+
 } from "../actions/types";
 
 const user = JSON.parse(localStorage.getItem("user"));
 
 const initialState = user
   ? { isLoggedIn: true, user }
-  : { isLoggedIn: false, user: null };
+  : { isLoggedIn: false, user: null, otp: "", email: "", username: "" };
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
+    case SET_OTP:
+      return {
+        ...state,
+        otp: payload.otp,
+        username: payload.username,
+      };
+    case SET_EMAIL:
+      return {
+        ...state,
+        email: payload.email,
+      };
     case REGISTER_SUCCESS:
       return {
         ...state,

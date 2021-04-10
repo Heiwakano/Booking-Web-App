@@ -9,6 +9,9 @@ import "@fortawesome/fontawesome-free/js/all.js";
 import "./App.css";
 
 import Login from "./components/Login";
+import SendOTP from "./components/SendOTP";
+import CheckOTP from "./components/CheckOTP";
+import ResetPassword from "./components/ResetPassword";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
@@ -136,6 +139,9 @@ const App = () => {
             <Route exact path={["/"]} component={Home} />
             <Route exact path={["/rooms"]} component={RoomsList} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/resetpassword" component={ResetPassword} />
+            <Route exact path="/sendotp" component={SendOTP} />
+            <Route exact path="/checkotp" component={CheckOTP} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/profile" component={Profile} />
             <Route path="/user" component={BoardUser} />

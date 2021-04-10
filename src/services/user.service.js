@@ -19,8 +19,11 @@ const getAdminBoard = () => {
   return axios.get(API_URL + "admin", { headers: authHeader() });
 };
 
-//Update user with id
-const updateUser = (username, data) => {
+const updateOTP = (email, data) => {
+  return axios.put(API_URL+ "user/otp/" + `${email}`, data);
+};
+
+const updateLoginAttempts = (username, data) => {
   return axios.put(API_URL+ "user/" + `${username}`, data);
 };
 
@@ -28,11 +31,22 @@ const getUser = (username) => {
   return axios.get(API_URL + "user/" + `${username}`,{ headers: authHeader() });
 };
 
+const checkOTPUser = (email, data) => {
+  return axios.put(API_URL + "checkotp/" + `${email}`, data);
+}
+
+const resetPassword = (email, data) => {
+  return axios.put(API_URL + "resetpassword/" + `${email}`, data);
+}
+
 export default {
   getPublicContent,
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,
-  updateUser,
+  updateOTP,
   getUser,
+  checkOTPUser,
+  resetPassword,
+  updateLoginAttempts,
 };

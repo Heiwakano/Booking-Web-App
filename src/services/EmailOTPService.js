@@ -1,10 +1,10 @@
 import http from "../http-common";
 
 //Create a OTP 
-const create = data => {
-    return http.post("/text-mail", data);
+const send = email => {
+    return http.post("/text-mail", {email: email});
   };
 
   export default {
-    create,
+    send,
   };
