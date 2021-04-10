@@ -27,6 +27,16 @@ const email = (value) => {
   }
 };
 
+const vname = (value) => {
+  if (value.length < 0 || value.length > 20) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        The name must be between 0 and 20 characters.
+      </div>
+    );
+  }
+};
+
 const vusername = (value) => {
   if (value.length < 3 || value.length > 20) {
     return (
@@ -51,16 +61,32 @@ class Register extends Component {
   constructor(props) {
     super(props);
     this.handleRegister = this.handleRegister.bind(this);
+    this.onChangeFirstName = this.onChangeFirstName.bind(this);
+    this.onChangeLastName = this.onChangeLastName.bind(this);
     this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
 
     this.state = {
+      firstname:"",
+      lastname:"",
       username: "",
       email: "",
       password: "",
       successful: false,
     };
+  }
+
+  onChangeFirstName(e) {
+    this.setState({
+      firstname: e.target.value,
+    });
+  }
+
+  onChangeLastName(e) {
+    this.setState({
+      lastname: e.target.value,
+    });
   }
 
   onChangeUsername(e) {
@@ -93,7 +119,7 @@ class Register extends Component {
     if (this.checkBtn.context._errors.length === 0) {
       this.props
         .dispatch(
-          register(this.state.username, this.state.email, this.state.password)
+          register(this.state.firstname,this.state.lastname,this.state.username, this.state.email, this.state.password)
         )
         .then(() => {
           this.setState({
@@ -128,6 +154,28 @@ class Register extends Component {
           >
             {!this.state.successful && (
               <div>
+                <div className="form-group">
+                  <label htmlFor="username">First Name</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="firstname"
+                    value={this.state.firstname}
+                    onChange={this.onChangeFirstName}
+                    validations={[required, vname]}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="username">Last Name</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="lastname"
+                    value={this.state.lastname}
+                    onChange={this.onChangeLastName}
+                    validations={[required, vname]}
+                  />
+                </div>
                 <div className="form-group">
                   <label htmlFor="username">Username</label>
                   <Input
@@ -172,7 +220,7 @@ class Register extends Component {
 
             {message && (
               <div className="form-group">
-                <div className={ this.state.successful ? "alert alert-success" : "alert alert-danger" } role="alert">
+                <div className={this.state.successful ? "alert alert-success" : "alert alert-danger"} role="alert">
                   {message}
                 </div>
               </div>

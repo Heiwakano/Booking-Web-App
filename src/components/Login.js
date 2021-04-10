@@ -26,6 +26,8 @@ const Login = (props) => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [newpassword1, setNewPassword1] = useState("");
+  const [newpassword2, setNewPassword2] = useState("");
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [otp, setOTP] = useState("");
@@ -35,6 +37,7 @@ const Login = (props) => {
 
   const [isForgotPass, setIsForgotPass] = useState(false);
   const [isSendOTP, setIsSendOTP] = useState(false);
+  const [isOTPCorrect, setIsOTPCorrect] = useState(false);
 
   const [numFailLogin, setNumFailLogin] = useState(0);
 
@@ -60,6 +63,16 @@ const Login = (props) => {
     setOTP(otp);
   }
 
+  const onChangeNewPass1 = (e) => {
+    const newpass1 = e.target.value;
+    setNewPassword1(newpass1);
+  }
+
+  const onChangeNewPass2 = (e) => {
+    const newpass2 = e.target.value;
+    setNewPassword2(newpass2);
+  }
+
   const handleLogin = (e) => {
     e.preventDefault();
 
@@ -70,8 +83,19 @@ const Login = (props) => {
     if (checkBtn.current.context._errors.length === 0) {
       dispatch(login(username, password))
         .then(() => {
-          props.history.push("/profile");
-          window.location.reload();
+          UserService.updateUser(username, {
+            loginAttempts: 0,
+            lastLoginAttempsDate: null,
+            lastLoginDate: new Date()
+          })
+            .then(() => {
+              setNumFailLogin(0);
+              props.history.push("/profile");
+              window.location.reload();
+            })
+            .catch((e) => {
+              console.log(e);
+            })
         })
         .catch(() => {
           setLoading(false);
@@ -83,7 +107,8 @@ const Login = (props) => {
                 setIsForgotPass(true);
               }
               UserService.updateUser(username, {
-                loginAttempts: numFailLogin + 1
+                loginAttempts: numFailLogin + 1,
+                lastLoginAttempsDate: new Date()
               })
                 .then(() => {
                   setNumFailLogin(numFailLogin + 1);
@@ -110,6 +135,7 @@ const Login = (props) => {
   const handleSendOTP = (e) => {
     e.preventDefault();
     form.current.validateAll();
+    setLoading(true);
     const ranNum = Math.floor(1000 + Math.random() * 9000);
     const makeid = (length) => {
       var result = [];
@@ -130,6 +156,7 @@ const Login = (props) => {
     if (checkBtn.current.context._errors.length === 0) {
       EmailOTPService.create(data)
         .then(() => {
+          setLoading(false);
           console.log("send OTP success!");
           const otpTime = new Date();
           UserService.updateUser(username, {
@@ -154,35 +181,128 @@ const Login = (props) => {
     } else {
       setLoading(false);
     }
-
-
   };
 
   const handleCheckOTP = (e) => {
     e.preventDefault();
     form.current.validateAll();
+    setLoading(true);
     const sendTime = new Date().getTime();
     UserService.getUser(username)
       .then((response) => {
         const otpRequestTime = new Date(response.data[0].otpRequestDate).getTime();
+        const correctOTP = response.data[0].otp;
         console.log("otpRequestTime", otpRequestTime);
         console.log("sendTime", sendTime);
         console.log("diffTime ", (sendTime - otpRequestTime) / (1000 * 60));
-        if ((sendTime - response.data[0].otpRequestDate) / (1000 * 60) > 15) {
+        if ((sendTime - otpRequestTime) / (1000 * 60) > 15) {
           console.log("Time Out!!");
+          setLoading(false);
         }
         else {
-          console.log("Correct!!");
+          if (correctOTP === otp) {
+            setLoading(false);
+            setIsOTPCorrect(true);
+            console.log("Correct!!");
+          }
+          else {
+            setLoading(false);
+            console.log("Wrong!!");
+          }
         }
       })
       .catch((e) => {
+        setLoading(false);
         console.log(e);
       })
   };
 
+  const handleCheckNewPassword = (e) => {
+    e.preventDefault();
+    form.current.validateAll();
+    setLoading(true);
+    if (newpassword1 === newpassword2) {
+      UserService.updateUser(username, {
+        password: newpassword1
+      })
+        .then(() => {
+          setLoading(false);
+          console.log("Update new password successfully");
+          setIsForgotPass(false);
+          setIsSendOTP(false);
+          setIsOTPCorrect(false);
+          props.history.push("/login");
+          window.location.reload();
+        })
+        .catch((e) => {
+          setLoading(false);
+          console.log(e);
+        })
+    }
+    else {
+      setLoading(false);
+      console.log("New Password doesn't match.");
+    }
+  };
+
   return (
     <div>
-      {isForgotPass ? isSendOTP ? (
+      {isForgotPass ? isSendOTP ? isOTPCorrect ? (
+        <div>
+          <div className="col-md-12">
+            <div className="card card-container">
+              <img
+                src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+                alt="profile-img"
+                className="profile-img-card"
+              />
+
+              <Form onSubmit={handleCheckNewPassword} ref={form}>
+                <div className="form-group">
+                  <label htmlFor="username">Reset Password</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="newpass1"
+                    value={newpassword1}
+                    onChange={onChangeNewPass1}
+                    validations={[required]}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="username">New Password Again</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="newpass2"
+                    value={newpassword2}
+                    onChange={onChangeNewPass2}
+                    validations={[required]}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <button className="btn btn-primary btn-block" disabled={loading}>
+                    {loading && (
+                      <span className="spinner-border spinner-border-sm"></span>
+                    )}
+                    <span>OK</span>
+                  </button>
+                </div>
+                {/* {message && (
+                  <div className="form-group">
+                    <div className="alert alert-danger" role="alert">
+                      {message}
+                    </div>
+                  </div>
+                )} */}
+                <CheckButton style={{ display: "none" }} ref={checkBtn} />
+
+              </Form>
+            </div>
+          </div>
+        </div>
+      ) : (
         <div>
           <div className="col-md-12">
             <div className="card card-container">
