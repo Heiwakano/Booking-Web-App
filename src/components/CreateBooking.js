@@ -72,8 +72,8 @@ const AddBooking = (props) => {
     var bookingData = {
       GuestLastName: getValues("GuestLastName"),
       GuestFirstName: getValues("GuestFirstName"),
-      CheckInDate: getValues("CheckInDate"),
-      CheckOutDate: getValues("CheckOutDate"),
+      CheckInDate: new Date(getValues("CheckInDate")),
+      CheckOutDate: new Date(getValues("CheckOutDate")),
       NumberOfAdults: getValues("NumberOfAdults"),
       NumberOfChildren: getValues("NumberOfChildren"),
       roomId: room.id,

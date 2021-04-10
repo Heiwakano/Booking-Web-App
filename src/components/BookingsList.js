@@ -144,11 +144,15 @@ const BookingsList = (props) => {
             },
             {
                 Header: "Check-In",
-                accessor: "CheckInDate",
+                accessor: d => (
+                    <div>{new Date(d.CheckInDate).getDate()}/{new Date(d.CheckInDate).getMonth()}/{new Date(d.CheckInDate).getFullYear()}</div>
+                  ),
             },
             {
                 Header: "Check-Out",
-                accessor: "CheckOutDate",
+                accessor: d => (
+                    <div>{new Date(d.CheckOutDate).getDate()}/{new Date(d.CheckOutDate).getMonth()}/{new Date(d.CheckOutDate).getFullYear()}</div>
+                  ),
             },
             {
                 Header: "Status",

@@ -30,15 +30,7 @@ const CheckOut = props => {
                 console.log(e);
             });
     };
-    const [dOfCheckOut,mOfCheckOut,yOfCheckOut] = [booking.CheckOutDate.slice(0,4),booking.CheckOutDate.slice(5,7),booking.CheckOutDate.slice(8,10)];
-    
-    const [dOfCheckIn,mOfCheckIn,yOfCheckIn] = [booking.CheckInDate.slice(0,4),booking.CheckInDate.slice(5,7),booking.CheckInDate.slice(8,10)];
 
-    // const calNightsOfBooking = () => {
-    //     return yOfCheckOut===yOfCheckIn?mOfCheckOut===mOfCheckIn?parseInt(dOfCheckOut)-parseInt(dOfCheckIn): 
-        
-    // }
-    
     useEffect(() => {
         console.log("UseEffect active checkout");
         console.log(props.match.params.bookingId);
@@ -60,7 +52,7 @@ const CheckOut = props => {
     };
 
     const updateStatus = () => {
-        BookingDataService.update(booking.id, {statusId: 3})
+        BookingDataService.update(booking.id, { statusId: 3 })
             .then(response => {
                 props.history.push("/bookings");
                 // successSaveNotify();
@@ -71,27 +63,40 @@ const CheckOut = props => {
             })
     };
 
+    var checkIn = new Date(booking.CheckInDate);
+    const timeCheckIn = checkIn.getTime();
+    var dd = String(checkIn.getDate()).padStart(2, '0');
+    var mm = String(checkIn.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = checkIn.getFullYear();
+
+    checkIn = dd + '/' + mm + '/' + yyyy;
+
+    var checkOut = new Date(booking.CheckOutDate);
+    const timeCheckOut = checkOut.getTime();
+    dd = String(checkOut.getDate()).padStart(2, '0');
+    mm = String(checkOut.getMonth() + 1).padStart(2, '0'); //January is 0!
+    yyyy = checkOut.getFullYear();
+
+    checkOut = dd + '/' + mm + '/' + yyyy;
+
+    const night = (timeCheckOut-timeCheckIn)/(1000*60*60*24);
+
     return (
         <Container>
             <Row>
                 <h1>Check Out {booking.GuestFirstName} {booking.GuestLastName}</h1>
             </Row>
             <BookingDetail name="Room" value={booking.RoomNumber} />
-            <BookingDetail name="Check-In" value={booking.CheckInDate} />
-            <BookingDetail name="Check-Out" value={booking.CheckOutDate} />
-            <BookingDetail name="Nights" value={
-                parseInt(booking.CheckOutDate[8] + booking.CheckOutDate[9])
-                - parseInt(booking.CheckInDate[8] + booking.CheckInDate[9])
-            } />
+            <BookingDetail name="Check-In" value={checkIn} />
+            <BookingDetail name="Check-Out" value={checkOut} />
+            <BookingDetail name="Nights" value={night} />
             <BookingDetail name="Adults" value={booking.NumberOfAdults} />
             <BookingDetail name="Children" value={booking.NumberOfChildren} />
             <BookingDetail name="Room Price" value={
                 "฿" + booking.Price.toString() + " per night"
             } />
             <BookingDetail name="Total" value={
-                "฿" + (booking.Price * (parseInt(booking.CheckOutDate[8] + booking.CheckOutDate[9])
-                    - parseInt(booking.CheckInDate[8] + booking.CheckInDate[9]))).toString()
-            } />
+                "฿" + (booking.Price * night)} />
             <Row>
                 <Col md="3">
                     <Button as="input" type="button" value="Confirm Check-Out" onClick={updateStatus} />{' '}
