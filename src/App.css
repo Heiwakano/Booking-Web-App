@@ -112,6 +112,8 @@ input {
   height: 50%;
   overflow-y: scroll;
 } 
-
+.preview {
+  max-width: 200px;
+}
 
 

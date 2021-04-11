@@ -2,6 +2,8 @@ import React from "react";
 import { Redirect } from 'react-router-dom';
 import { useSelector } from "react-redux";
 
+import UploadImages from "./upload-files";
+
 const Profile = () => {
   const { user: currentUser } = useSelector((state) => state.auth);
 
@@ -31,6 +33,7 @@ const Profile = () => {
         {currentUser.roles &&
           currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
       </ul>
+      <UploadImages />
     </div>
   );
 };
