@@ -3,10 +3,15 @@ import RoomDataService from "../services/RoomDataService";
 
 import { Redirect } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { Col, Form, Button } from "react-bootstrap";
+import { Col, Form } from "react-bootstrap";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from "react-redux";
+
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 const EditRoom = props => {
   const {
@@ -27,7 +32,32 @@ const EditRoom = props => {
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [currentRoom,setCurrentRoom] = useState("");
+  const [currentRoom, setCurrentRoom] = useState("");
+
+  const { user: currentUser } = useSelector((state) => state.auth);
+
+  //sweetalert
+  const MySwal = withReactContent(Swal);
+
+  const theme = createMuiTheme({
+    overrides: {
+      // Style sheet name ⚛️
+      MuiButton: {
+        // Name of the rule
+        root: {
+          // Some CSS
+          margin: '0 3% 3% 0',
+          //   background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+          //   borderRadius: 3,
+          //   border: 0,
+          //   color: 'white',
+          //   height: 48,
+          //   padding: '0 30px',
+          //   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+        },
+      },
+    },
+  });
 
   const getRoom = id => {
     RoomDataService.get(id)
@@ -51,61 +81,10 @@ const EditRoom = props => {
 
   }, [props.match.params.id]);
 
-  var toastId = null;
+  const updateRoom = (event) => {
 
-  const successSaveNotify = () => {
-    return (toastId = toast.success('Saved Room!', {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      // pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      onClose: () => setSubmitted(true)
-      }));
-  }
-
-  const successDeleteNotify = () => {
-    return (toastId = toast.success('Deleted Room!', {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      // pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      onClose: () => props.history.push("/rooms")
-      }));
-  }
-
-  const errorNotify = () => {
-    return (toastId = toast.error('Error occurs while saving room!', {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      // pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      // onClose: () => setSubmitted(true)
-      }));
-  }
-
-  const errorDeleteNotify = () => {
-    return (toastId = toast.error('Error occurs while deleting room!', {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      // pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      // onClose: () => setSubmitted(true)
-      }));
-  }
-
-  const updateRoom = () => {
+    event.preventDefault();
+    event.stopPropagation();
 
     const data = {
       RoomNumber: getValues("RoomNumber"),
@@ -116,32 +95,68 @@ const EditRoom = props => {
     console.log("data", data);
     console.log("Id", getValues("Id"));
     RoomDataService.update(getValues("Id"), data)
-      .then(response => {
-        setCurrentRoom(response.data.RoomNumber);
-        successSaveNotify();
+      .then(() => {
+        Swal.fire(
+          'Saved!',
+          'Your room has been saved.',
+          'success'
+      )
+          .then(() => props.history.push("/rooms"));
       })
       .catch(e => {
-        errorNotify();
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+          // footer: '<a href>Why do I have this issue?</a>'
+        })
         console.log(e);
       });
   };
 
   const deleteRoom = () => {
-    RoomDataService.remove(getValues("Id"))
-      .then(response => {
-        console.log(response.data);
-        successDeleteNotify();
-        // props.history.push("/rooms");
-      })
-      .catch(e => {
-        console.log(e);
-        errorDeleteNotify();
-      });
+    MySwal.fire({
+      title: 'Are you sure?',
+      text: "you want to permanently delete this room?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const id = props.match.params.roomId;
+        RoomDataService.remove(id)
+          .then(() => {
+            Swal.fire(
+              'Deleted!',
+              'Your room has been deleted.',
+              'success'
+            )
+              .then(() => props.history.push("/rooms"));
+          })
+          .catch((e) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+              // footer: '<a href>Why do I have this issue?</a>'
+            })
+            console.log(e);
+          });
+      }
+    })
+
   };
 
   const cancelEdit = () => {
     props.history.push("/rooms");
   };
+
+  const haddleChange = (e) => {
+    const roomnumber = e.target.value;
+    setCurrentRoom(roomnumber);
+  }
 
   return (
     <div className="sheet padding-10mm">
@@ -149,9 +164,9 @@ const EditRoom = props => {
         <Redirect to="/rooms" />
       ) : (
         <div>
-          <Form noValidate onSubmit={handleSubmit(updateRoom)}>
+          <Form noValidate onSubmit={(event) => handleSubmit(updateRoom(event))}>
             <Form.Row className="header-create">
-              <h1>Room {getValues("RoomNumber")}</h1>
+              <h1>Room {currentRoom}</h1>
             </Form.Row>
             <Form.Row>
               <Col md="3">
@@ -169,16 +184,20 @@ const EditRoom = props => {
                   as="input"
                   type="text"
                   name="RoomNumber"
+                  onChange={haddleChange}
                   ref={
                     register({
                       maxLength: 3,
                       required: true,
                       pattern: {
                         value: /[0-9]/
+                      },
+                      validate: {
+                        positive: (value) => value >= 0,
                       }
                     })
                   }
-                  isValid={!errors.RoomNumber && touched.RoomNumber}
+
                 />
                 {errors.RoomNumber?.type === "maxLength" && (
                   <p>Max room number length eqaul to 3.</p>
@@ -189,7 +208,9 @@ const EditRoom = props => {
                 {errors.RoomNumber?.type === "pattern" && (
                   <p>Need number type[0-9].</p>
                 )}
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                {errors.RoomNumber?.type === "positive" && (
+                  <p>Room number must not be negative.</p>
+                )}
               </Form.Group>
             </Form.Row>
             <Form.Row>
@@ -202,16 +223,21 @@ const EditRoom = props => {
                   as="input"
                   type="number"
                   name="AdultsCapacity"
+                  min="0"
                   ref={register({
-                    required: true
+                    required: true,
+                    validate: {
+                      positive: (value) => value >= 0,
+                    }
                   })
                   }
-                  isValid={!errors.AdultsCapacity && touched.AdultsCapacity}
                 />
                 {errors.AdultsCapacity?.type === "required" && (
                   <p>Need number or 0.</p>
                 )}
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                {errors.AdultsCapacity?.type === "positive" && (
+                  <p>Need number more than or eqaul 0.</p>
+                )}
               </Form.Group>
             </Form.Row>
             <Form.Row>
@@ -224,17 +250,22 @@ const EditRoom = props => {
                   as="input"
                   type="number"
                   name="ChildrenCapacity"
+                  min="0"
                   ref={
                     register({
-                      required: true
+                      required: true,
+                      validate: {
+                        positive: (value) => value >= 0,
+                      }
                     })
                   }
-                  isValid={!errors.ChildrenCapacity && touched.ChildrenCapacity}
                 />
                 {errors.ChildrenCapacity?.type === "required" && (
                   <p>Need number or 0.</p>
                 )}
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                {errors.ChildrenCapacity?.type === "positive" && (
+                  <p>Need number more than or eqaul 0.</p>
+                )}
               </Form.Group>
             </Form.Row>
             <Form.Row>
@@ -248,41 +279,38 @@ const EditRoom = props => {
                   type="number"
                   step="0.01"
                   name="Price"
+                  min="0"
                   ref={
                     register({
-                      required: true
+                      required: true,
+                      validate: {
+                        positive: (value) => value >= 0,
+                      }
                     })
                   }
-                  isValid={!errors.Price && touched.Price}
                 />
                 {errors.Price?.type === "required" && (
                   <p>Need price</p>
                 )}
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                {errors.Price?.type === "positive" && (
+                  <p>Need price more than or eqaul 0.</p>
+                )}
               </Form.Group>
             </Form.Row>
             <Form.Row>
-              <Col md="1.5">
-                <Button as="input"
-                  type="submit"
-                  value="Save"
-                />{' '}
-                <ToastContainer />
-              </Col>
-              <Col md="1.5">
-                <Button as="input"
-                  type="button"
-                  value="Delete"
-                  onClick={deleteRoom}
-                />{' '}
-              </Col>
-              <Col md="1">
-                <Button as="input"
-                  type="button"
-                  value="Cancel"
-                  onClick={cancelEdit}
-                />{' '}
-              </Col>
+
+            {currentUser && currentUser.roles.includes('moderator') &&<ThemeProvider theme={theme}>
+                <Button variant="contained" type="submit" size="large" name="save" color="primary" >Save</Button>
+              </ThemeProvider>}
+
+              {currentUser && currentUser.roles.includes('moderator') && <ThemeProvider theme={theme}>
+                <Button variant="contained" size="large" onClick={deleteRoom} name="delete" color="secondary" >Delete</Button>
+              </ThemeProvider>}
+
+              <ThemeProvider theme={theme}>
+                <Button variant="contained" size="large" onClick={cancelEdit} name="Back" color="default" >Back</Button>
+              </ThemeProvider>
+
             </Form.Row>
           </Form>
         </div>

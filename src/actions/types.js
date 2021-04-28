@@ -9,5 +9,7 @@ export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
 
 export const SET_OTP="SET_OTP";
 export const SET_EMAIL="SET_EMAIL";
+export const SET_PROFILEPICTURE ="SET_PROFILEPICTURE";
+export const SET_USERNAME ="SET_USERNAME";
 
 

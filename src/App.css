@@ -85,7 +85,7 @@ Col {
   margin: 7%;
 }
 .inputData {
-  margin: 2%;
+  margin: 2% 0;
 }
 input + p {
   color: #bf1650;
@@ -112,8 +112,40 @@ input {
   height: 50%;
   overflow-y: scroll;
 } 
-.preview {
-  max-width: 200px;
+
+tbody {
+  height:270px;
+  overflow:auto;
 }
 
+.Title_Section {
+  display: none;
+ }
 
+ .Row_Fix_Height {
+  height:70px;
+}
+.container_height {
+  height: 260mm;
+}
+.button-center {
+  margin: 0 auto;
+}
+.button-left {
+  margin: 0;
+}
+.Td-center 
+{
+  vertical-align: middle;
+}
+.btn-flat {
+  background-color: white;
+  color: black;
+  border: 1px solid #ced4da;
+}
+nav .navbar-nav li a {
+  color: black !important;
+}
+.button-booking {
+  margin: 0 3% 3% 0;
+}

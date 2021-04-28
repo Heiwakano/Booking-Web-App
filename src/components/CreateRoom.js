@@ -1,19 +1,45 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import RoomDataService from "../services/RoomDataService";
+
+import { useSelector } from "react-redux";
 
 import { Redirect } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { Col, Form, Button } from "react-bootstrap";
+import { Col, Form } from "react-bootstrap";
 
-const AddRoom = () => {
+import Swal from 'sweetalert2';
+
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+
+const AddRoom = (props) => {
 
   const { register, handleSubmit, errors, formState, getValues } = useForm({
     mode: "onChange"
   });
 
-  const { touched } = formState;
-
   const [submitted, setSubmitted] = useState(false);
+  const { user: currentUser } = useSelector((state) => state.auth);
+
+  const theme = createMuiTheme({
+    overrides: {
+      // Style sheet name ⚛️
+      MuiButton: {
+        // Name of the rule
+        root: {
+          // Some CSS
+          margin: '0 3% 3% 0',
+          //   background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+          //   borderRadius: 3,
+          //   border: 0,
+          //   color: 'white',
+          //   height: 48,
+          //   padding: '0 30px',
+          //   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+        },
+      },
+    },
+  });
 
 
   const saveRoom = () => {
@@ -26,11 +52,21 @@ const AddRoom = () => {
 
     RoomDataService.create(data)
       .then(response => {
-        setSubmitted(true);
-        console.log("saved Room in data base");
+        Swal.fire(
+          'Saved!',
+          'Your room has been created.',
+          'success'
+        ).then(() => setSubmitted(true));
+        console.log("saved room in data base");
         console.log(response.data);
       })
       .catch(e => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+          // footer: '<a href>Why do I have this issue?</a>'
+        });
         console.log(e);
       });
   };
@@ -59,10 +95,12 @@ const AddRoom = () => {
                     required: true,
                     pattern: {
                       value: /[0-9]/
+                    },
+                    validate: {
+                      positive: (value) => value >= 0,
                     }
                   })
                 }
-                isValid={!errors.RoomNumber && touched.RoomNumber}
               />
               {errors.RoomNumber?.type === "maxLength" && (
                 <p>Max room number length eqaul to 3.</p>
@@ -73,7 +111,9 @@ const AddRoom = () => {
               {errors.RoomNumber?.type === "pattern" && (
                 <p>Need number type[0-9].</p>
               )}
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              {errors.RoomNumber?.type === "positive" && (
+                <p>Room number must be number.</p>
+              )}
             </Form.Group>
           </Form.Row>
 
@@ -86,17 +126,22 @@ const AddRoom = () => {
                 as="input"
                 type="number"
                 name="AdultsCapacity"
+                min="0"
                 ref={
                   register({
-                    required: true
+                    required: true,
+                    validate: {
+                      positive: (value) => value >= 0,
+                    }
                   })
                 }
-                isValid={!errors.AdultsCapacity && touched.AdultsCapacity}
               />
               {errors.AdultsCapacity?.type === "required" && (
                 <p>Need number or 0.</p>
               )}
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              {errors.AdultsCapacity?.type === "positive" && (
+                <p>Need number more than or eqaul 0.</p>
+              )}
             </Form.Group>
           </Form.Row>
 
@@ -109,17 +154,22 @@ const AddRoom = () => {
                 as="input"
                 type="number"
                 name="ChildrenCapacity"
+                min="0"
                 ref={
                   register({
-                    required: true
+                    required: true,
+                    validate: {
+                      positive: (value) => value >= 0,
+                    }
                   })
                 }
-                isValid={!errors.ChildrenCapacity && touched.ChildrenCapacity}
               />
               {errors.ChildrenCapacity?.type === "required" && (
                 <p>Need number or 0.</p>
               )}
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              {errors.ChildrenCapacity?.type === "positive" && (
+                <p>Need number more than or eqaul 0.</p>
+              )}
             </Form.Group>
           </Form.Row>
 
@@ -133,24 +183,32 @@ const AddRoom = () => {
                 type="number"
                 step="0.01"
                 name="Price"
+                min="0"
                 ref={
                   register({
-                    required: true
+                    required: true,
+                    validate: {
+                      positive: (value) => value >= 0,
+                    }
                   })
                 }
-                isValid={!errors.Price && touched.Price}
               />
               {errors.Price?.type === "required" && (
                 <p>Need price</p>
               )}
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              {errors.Price?.type === "positive" && (
+                <p>Need price more than or eqaul 0.</p>
+              )}
             </Form.Group>
           </Form.Row>
 
-
-          <Button as="input" type="submit" className="btn btn-success" value="Submit"/>{' '}
-            
-      </Form>
+          {currentUser && currentUser.roles.includes('moderator') &&<ThemeProvider theme={theme}>
+            <Button type="submit" variant="contained" size="large" name="createroom" style={{ background: '#7CFC00', color: 'white' }} ><b>Create Room</b></Button>
+          </ThemeProvider>}
+          <ThemeProvider theme={theme}>
+            <Button variant="contained" size="large" onClick={() => props.history.push("/rooms")} name="Back" color="default" >Back</Button>
+          </ThemeProvider>
+        </Form>
       )}
     </div>
   );

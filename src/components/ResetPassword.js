@@ -6,7 +6,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 
-import UserService from "../services/user.service";
+import { resetpassword } from "../actions/resetpassword";
 
 const required = (value) => {
   if (!value) {
@@ -32,8 +32,9 @@ const ResetPassword = (props) => {
   const { email } = useSelector(state => state.auth);
   const { otp } = useSelector(state => state.auth);
   const { username } = useSelector(state => state.auth);
+  const { time } = useSelector(state => state.auth);
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const onChangeNewPass1 = (e) => {
     const newpass1 = e.target.value;
@@ -49,30 +50,22 @@ const ResetPassword = (props) => {
     return <Redirect to="/profile" />;
   }
 
-
   const handleCheckNewPassword = (e) => {
     e.preventDefault();
     form.current.validateAll();
     setLoading(true);
-    if (newpassword1 === newpassword2) {
-      UserService.resetPassword(email, {
-        password: newpassword1,
-        otp: otp,
-      })
+    if (checkBtn.current.context._errors.length === 0) {
+      dispatch(resetpassword(email, newpassword1, newpassword2, otp, time))
         .then(() => {
           setLoading(false);
-          console.log("Update new password successfully");
           props.history.push("/login");
-          window.location.reload();
         })
-        .catch((e) => {
+        .catch(() => {
           setLoading(false);
-          console.log(e);
         })
     }
     else {
       setLoading(false);
-      console.log("New Password doesn't match.");
     }
   };
 
@@ -101,7 +94,7 @@ const ResetPassword = (props) => {
               <div className="form-group">
                 <label htmlFor="username">Reset Password</label>
                 <Input
-                  type="text"
+                  type="password"
                   className="form-control"
                   name="newpass1"
                   value={newpassword1}
@@ -112,7 +105,7 @@ const ResetPassword = (props) => {
               <div className="form-group">
                 <label htmlFor="username">Confirm Password</label>
                 <Input
-                  type="text"
+                  type="password"
                   className="form-control"
                   name="newpass2"
                   value={newpassword2}

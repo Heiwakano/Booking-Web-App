@@ -27,11 +27,21 @@ const email = (value) => {
   }
 };
 
-const vname = (value) => {
-  if (value.length < 0 || value.length > 20) {
+const vfname = (value) => {
+  if (value.match("^[a-zA-Z ]*$") === null) {
     return (
       <div className="alert alert-danger" role="alert">
-        The name must be between 0 and 20 characters.
+        The first name must be a english character.
+      </div>
+    );
+  }
+};
+
+const vlname = (value) => {
+  if (value.match("^[a-zA-Z ]*$") === null) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        The last name must be a english character.
       </div>
     );
   }
@@ -48,10 +58,10 @@ const vusername = (value) => {
 };
 
 const vpassword = (value) => {
-  if (value.length < 6 || value.length > 40) {
+  if (value.length < 1 || value.length > 40) {
     return (
       <div className="alert alert-danger" role="alert">
-        The password must be between 6 and 40 characters.
+        The password must be between 1 and 40 characters.
       </div>
     );
   }
@@ -155,28 +165,6 @@ class Register extends Component {
             {!this.state.successful && (
               <div>
                 <div className="form-group">
-                  <label htmlFor="username">First Name</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="firstname"
-                    value={this.state.firstname}
-                    onChange={this.onChangeFirstName}
-                    validations={[required, vname]}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="username">Last Name</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="lastname"
-                    value={this.state.lastname}
-                    onChange={this.onChangeLastName}
-                    validations={[required, vname]}
-                  />
-                </div>
-                <div className="form-group">
                   <label htmlFor="username">Username</label>
                   <Input
                     type="text"
@@ -209,6 +197,28 @@ class Register extends Component {
                     value={this.state.password}
                     onChange={this.onChangePassword}
                     validations={[required, vpassword]}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="username">First Name</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="firstname"
+                    value={this.state.firstname}
+                    onChange={this.onChangeFirstName}
+                    validations={[required, vfname]}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="username">Last Name</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="lastname"
+                    value={this.state.lastname}
+                    onChange={this.onChangeLastName}
+                    validations={[required, vlname]}
                   />
                 </div>
 

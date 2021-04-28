@@ -1,7 +1,12 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import UploadService from "../services/file-upload.service";
+import {
+  SET_PROFILEPICTURE,
+} from "../actions/types";
 
-export default class UploadImages extends Component {
+class UploadImages extends Component {
   constructor(props) {
     super(props);
     this.selectFile = this.selectFile.bind(this);
@@ -9,29 +14,25 @@ export default class UploadImages extends Component {
 
     this.state = {
       currentFile: undefined,
-      previewImage: undefined,
+      // previewImage: undefined,
       progress: 0,
       message: "",
-
-      imageInfos: [],
+      isUploaded: false,
     };
   }
-
-  componentDidMount() {
-    UploadService.getFiles().then((response) => {
-      this.setState({
-        imageInfos: response.data,
-      });
-    });
-  }
-
+  
   selectFile(event) {
     this.setState({
       currentFile: event.target.files[0],
-      previewImage: URL.createObjectURL(event.target.files[0]),
+      // previewImage: URL.createObjectURL(event.target.files[0]),
       progress: 0,
       message: ""
     });
+  }
+
+  refresh() {
+    this.props.history.push("/profile");
+    window.location.reload();
   }
 
   upload() {
@@ -39,7 +40,8 @@ export default class UploadImages extends Component {
       progress: 0,
     });
 
-    UploadService.upload(this.state.currentFile, (event) => {
+
+    UploadService.upload(this.state.currentFile, this.props.email, (event) => {
       this.setState({
         progress: Math.round((100 * event.loaded) / event.total),
       });
@@ -47,42 +49,51 @@ export default class UploadImages extends Component {
       .then((response) => {
         this.setState({
           message: response.data.message,
+          isUploaded: true,
         });
-        return UploadService.getFiles();
+        UploadService.getProfilePic(this.props.email)
+        .then((response)=> {
+          const profilePicture = response.data[0].profilePicture;
+          const user = {...this.props.user, profilePicture: profilePicture};
+          this.props.dispatch({
+            type: SET_PROFILEPICTURE,
+            payload: { user: user },
+          })
+        
+         
+        })
+        .catch((e)=> {
+          console.log(e);
+        });
+
+      
       })
-      .then((files) => {
-        this.setState({
-          imageInfos: files.data,
-        });
+      .catch((e)=> {
+        console.log();
       })
-      .catch((err) => {
-        this.setState({
-          progress: 0,
-          message: "Could not upload the image!",
-          currentFile: undefined,
-        });
-      });
+     
   }
+  
 
   render() {
     const {
       currentFile,
-      previewImage,
+      // previewImage,
       progress,
       message,
-      imageInfos,
+      isUploaded,
     } = this.state;
 
     return (
       <div>
         <div className="row">
-          <div className="col-8">
+          <div className="col-6">
             <label className="btn btn-default p-0">
               <input type="file" accept="image/*" onChange={this.selectFile} />
             </label>
           </div>
 
-          <div className="col-4">
+          <div className="col-2">
             <button
               className="btn btn-success btn-sm"
               disabled={!currentFile}
@@ -91,6 +102,17 @@ export default class UploadImages extends Component {
               Upload
             </button>
           </div>
+
+          {isUploaded?( <div className="col-2">
+            <button
+              className="btn btn-success btn-sm"
+              disabled={!currentFile}
+              onClick={()=>this.refresh()}
+            >
+              OK
+            </button>
+          </div>)
+          :(<div></div>)}
         </div>
 
         {currentFile && (
@@ -108,30 +130,21 @@ export default class UploadImages extends Component {
           </div>
         )}
 
-        {previewImage && (
+        {/* {previewImage && (
           <div>
             <img className="preview" src={previewImage} alt="" />
           </div>
-        )}
+        )} */}
 
         {message && (
           <div className="alert alert-secondary mt-3" role="alert">
             {message}
-          </div> 
+          </div>
         )}
 
-        <div className="card mt-3">
-          <div className="card-header">List of Files</div>
-          <ul className="list-group list-group-flush">
-            {imageInfos &&
-              imageInfos.map((img, index) => (
-                <li className="list-group-item" key={index}>
-                  <a href={img.url}>{img.name}</a>
-                </li>
-              ))}
-          </ul>
-        </div>
+    
       </div>
     );
   }
 }
+export default connect()(withRouter(UploadImages));

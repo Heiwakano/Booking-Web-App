@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import BookingDataService from "../services/BookingDataService";
 
 import { Redirect } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 
-import { Col, Form, Button } from "react-bootstrap";
+import { Col, Form } from "react-bootstrap";
+
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
 const AddBooking = (props) => {
 
@@ -19,8 +25,8 @@ const AddBooking = (props) => {
     defaultValues: {
       NumberOfAdults: 1,
       NumberOfChildren: 0,
-      GuestLastName: "Last name",
-      GuestFirstName: "First name",
+      GuestLastName: "",
+      GuestFirstName: "",
     }
   });
 
@@ -35,6 +41,29 @@ const AddBooking = (props) => {
   const [room, setRoom] = useState(initialRoomState);
   const [submitted, setSubmitted] = useState(false);
   const [getAvaiClicked, setgetAvaiClicked] = useState(false);
+
+  const theme = createMuiTheme({
+    overrides: {
+      // Style sheet name ⚛️
+      MuiButton: {
+        // Name of the rule
+        root: {
+          // Some CSS
+          margin: '0 3% 3% 0',
+          //   background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+          //   borderRadius: 3,
+          //   border: 0,
+          //   color: 'white',
+          //   height: 48,
+          //   padding: '0 30px',
+          //   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+        },
+      },
+    },
+  });
+
+  //sweetalert
+  const MySwal = withReactContent(Swal);
 
   const findCheapest = () => {
     const data = {
@@ -57,6 +86,12 @@ const AddBooking = (props) => {
         setgetAvaiClicked(true);
       })
       .catch(e => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+          // footer: '<a href>Why do I have this issue?</a>'
+        });
         console.log(e);
       });
 
@@ -72,8 +107,8 @@ const AddBooking = (props) => {
     var bookingData = {
       GuestLastName: getValues("GuestLastName"),
       GuestFirstName: getValues("GuestFirstName"),
-      CheckInDate: new Date(getValues("CheckInDate")),
-      CheckOutDate: new Date(getValues("CheckOutDate")),
+      CheckInDate: getValues("CheckInDate"),
+      CheckOutDate: getValues("CheckOutDate"),
       NumberOfAdults: getValues("NumberOfAdults"),
       NumberOfChildren: getValues("NumberOfChildren"),
       roomId: room.id,
@@ -82,11 +117,21 @@ const AddBooking = (props) => {
 
     BookingDataService.create(bookingData)
       .then(response => {
-        setSubmitted(true);
+        Swal.fire(
+          'Saved!',
+          'Your booking has been created.',
+          'success'
+        ).then(() => setSubmitted(true));
         console.log("saved booking in data base");
         console.log(response.data);
       })
       .catch(e => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+          // footer: '<a href>Why do I have this issue?</a>'
+        });
         console.log(e);
       });
 
@@ -120,11 +165,10 @@ const AddBooking = (props) => {
                   register({
                     required: true,
                     pattern: {
-                      value: /[A-Za-z]/
-                    }
+                      value: /^(?:[A-Za-z]+)$/
+                    },
                   })
                 }
-                isValid={!errors.GuestLastName && touched.GuestLastName}
               />
               {errors.GuestLastName?.type === "required" && (
                 <p>Need last name.</p>
@@ -148,11 +192,10 @@ const AddBooking = (props) => {
                   register({
                     required: true,
                     pattern: {
-                      value: /[A-Za-z]/
-                    }
+                      value: /^(?:[A-Za-z]+)$/
+                    },
                   })
                 }
-                isValid={!errors.GuestFirstName && touched.GuestFirstName}
               />
               {errors.GuestFirstName?.type === "required" && (
                 <p>Need first name.</p>
@@ -160,6 +203,7 @@ const AddBooking = (props) => {
               {errors.GuestFirstName?.type === "pattern" && (
                 <p>Need text type[A-Z,a-z].</p>
               )}
+
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -175,7 +219,6 @@ const AddBooking = (props) => {
                   required: true
                 })
                 }
-                isValid={!errors.CheckInDate && touched.CheckInDate}
               />
               {errors.CheckInDate?.type === "required" && (
                 <p>Need Check In.!</p>
@@ -201,8 +244,6 @@ const AddBooking = (props) => {
                     },
                   }
                 })}
-
-                isValid={!errors.CheckOutDate && touched.CheckOutDate}
               />
               {errors.CheckOutDate?.type === "moreThanCheckIn" && (
                 <p>Check Out must more than Check In.</p>
@@ -227,7 +268,7 @@ const AddBooking = (props) => {
                     positive: (value) => value >= 0,
                   }
                 })}
-                isValid={!errors.NumberOfChildren && touched.NumberOfChildren}
+
               />
               {errors.NumberOfChildren?.type === "positive" && (
                 <p>Need number or 0</p>
@@ -249,7 +290,7 @@ const AddBooking = (props) => {
                     positive: (value) => value > 0,
                   }
                 })}
-                isValid={!errors.NumberOfAdults && touched.NumberOfAdults}
+
               />
               {errors.NumberOfAdults?.type === "positive" && (
                 <p>Need number or 0</p>
@@ -267,43 +308,37 @@ const AddBooking = (props) => {
 
           </Form.Row>
           <Form.Row>
-            <Col md="6">
-              <Button as="input"
-                name="getAvailableBut"
-                type="Submit"
-                value="Get Available Room"
-                className="btn-lg btn-block"
-              />{' '}
-            </Col>
-
+            <ThemeProvider theme={theme}>
+              <Button
+                variant="contained"
+                type="submit"
+                size="large"
+                name="getAvailableBut" 
+                style={{ background: '#33FF8C', color: 'white' }} >
+                Get Available Room
+            </Button>
+            </ThemeProvider>
             {getAvaiClicked ? (
-              <Col>
-                <Button as="input" type="button" value="Book Room" onClick={saveBooking} className="btn-lg btn-block" />{' '}
-              </Col>)
+              <ThemeProvider theme={theme}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  onClick={saveBooking}
+                  name="bookroom" color="secondary" >
+                  Book Room
+              </Button>
+              </ThemeProvider>
+            )
               : (<div></div>)}
-              {getAvaiClicked ? (
-              <Form.Row>
-                <Col md="12">
-                  <Button as="input"
-                    type="button"
-                    value="Cancel"
-                    className="btn-lg btn-block"
-                    onClick={cancelBooking}
-                  />{' '}
-                </Col>
-              </Form.Row>
-            ) :
-              (
-                <Col md="6">
-                  <Button as="input"
-                    type="button"
-                    value="Cancel"
-                    className="btn-lg btn-block"
-                    onClick={cancelBooking}
-                  />{' '}
-                </Col>
-              )}
-
+            <ThemeProvider theme={theme}>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={cancelBooking}
+                name="back" color="default" >
+                Back
+                  </Button>
+            </ThemeProvider>
           </Form.Row>
         </Form>
       )}

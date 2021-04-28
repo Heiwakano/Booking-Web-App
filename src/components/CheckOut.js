@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import BookingDataService from "../services/BookingDataService";
 
-import { Col, Row, Button, Container } from "react-bootstrap";
+import { Col, Row, Button, Container, Form } from "react-bootstrap";
+
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 const CheckOut = props => {
 
@@ -14,9 +17,10 @@ const CheckOut = props => {
         NumberOfAdults: 0,
         NumberOfChildren: 0,
         Price: 0,
-        RoomNumber: "000",
-        id: 22,
+        RoomNumber: "",
+        id: undefined,
     });
+
 
     const getBooking = id => {
         BookingDataService.get(id)
@@ -31,6 +35,7 @@ const CheckOut = props => {
             });
     };
 
+
     useEffect(() => {
         console.log("UseEffect active checkout");
         console.log(props.match.params.bookingId);
@@ -40,25 +45,43 @@ const CheckOut = props => {
 
     const BookingDetail = props => {
         return (
-            <Row>
+            <Form.Row>
                 <Col md="3">
-                    {props.name}
+                    <Form.Label>{props.name}</Form.Label>
                 </Col>
-                <Col>
-                    {props.value}
-                </Col>
-            </Row>
+                {props.name==="Room Price"||props.name==="Total"?(
+                    <Col md="6">
+                        <Form.Label>{props.value}</Form.Label>
+                    </Col>
+                    
+                ):(
+                    <Form.Group as={Col} className="inputData" md="6">
+                    <Form.Control
+                        as="input"
+                        type="text"
+                        name={props.name}
+                        readOnly
+                        value={props.value}
+                    />
+                </Form.Group>
+                )}
+               
+            </Form.Row>
         )
     };
 
     const updateStatus = () => {
         BookingDataService.update(booking.id, { statusId: 3 })
-            .then(response => {
-                props.history.push("/bookings");
-                // successSaveNotify();
+            .then(() => {
+                Swal.fire(
+                    'Saved!',
+                    'Your booking has been checked out.',
+                    'success'
+                )
+                    .then(() => props.history.push("/bookings"))
             })
             .catch(e => {
-                // errorNotify();
+                
                 console.log(e);
             })
     };
@@ -79,32 +102,36 @@ const CheckOut = props => {
 
     checkOut = dd + '/' + mm + '/' + yyyy;
 
-    const night = (timeCheckOut-timeCheckIn)/(1000*60*60*24);
+    const night = Math.floor((timeCheckOut - timeCheckIn) / (1000 * 60 * 60 * 24));
 
     return (
-        <Container>
-            <Row>
-                <h1>Check Out {booking.GuestFirstName} {booking.GuestLastName}</h1>
-            </Row>
-            <BookingDetail name="Room" value={booking.RoomNumber} />
-            <BookingDetail name="Check-In" value={checkIn} />
-            <BookingDetail name="Check-Out" value={checkOut} />
-            <BookingDetail name="Nights" value={night} />
-            <BookingDetail name="Adults" value={booking.NumberOfAdults} />
-            <BookingDetail name="Children" value={booking.NumberOfChildren} />
-            <BookingDetail name="Room Price" value={
-                "฿" + booking.Price.toString() + " per night"
-            } />
-            <BookingDetail name="Total" value={
-                "฿" + (booking.Price * night)} />
-            <Row>
-                <Col md="3">
-                    <Button as="input" type="button" value="Confirm Check-Out" onClick={updateStatus} />{' '}
-                </Col>
-                <Col md="3">
-                    <Button as="input" type="button" value="Cancel" onClick={() => props.history.push("/bookings/" + booking.id)} />{' '}
-                </Col>
-            </Row>
+        <Container className="sheet padding-10mm">
+            <Form>
+                <Form.Row className="header-create">
+                    <h1>Check Out {booking.GuestFirstName} {booking.GuestLastName}</h1>
+                </Form.Row>
+                <BookingDetail name="Room" value={booking.RoomNumber} />
+                <BookingDetail name="Check-In" value={checkIn} />
+                <BookingDetail name="Check-Out" value={checkOut} />
+                <BookingDetail name="Nights" value={night} />
+                <BookingDetail name="Adults" value={booking.NumberOfAdults} />
+                <BookingDetail name="Children" value={booking.NumberOfChildren} />
+                <BookingDetail name="Room Price" value={
+                    "฿" + booking.Price.toString() + " per night"
+                } />
+                <BookingDetail name="Total" value={
+                    "฿" + (booking.Price * night)} />
+                <Row>
+                    <Col md="3">
+                        <Button as="input" type="button" value="Confirm Check-Out" onClick={updateStatus} />{' '}
+                    </Col>
+                    <Col md="3">
+                        <Button as="input" type="button" value="Back" onClick={() => props.history.push("/bookings/" + booking.id)} />{' '}
+                    </Col>
+                </Row>
+
+            </Form>
+
 
 
 

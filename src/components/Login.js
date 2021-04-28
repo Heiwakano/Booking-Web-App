@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, Link } from 'react-router-dom';
 
@@ -7,7 +7,6 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 
 import { login } from "../actions/auth";
-import UserService from "../services/user.service";
 
 const required = (value) => {
   if (!value) {
@@ -26,11 +25,8 @@ const Login = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
   const { isLoggedIn } = useSelector(state => state.auth);
   const { message } = useSelector(state => state.message);
-
-  const [numFailLogin, setNumFailLogin] = useState(0);
 
   const dispatch = useDispatch();
 
@@ -54,45 +50,11 @@ const Login = (props) => {
     if (checkBtn.current.context._errors.length === 0) {
       dispatch(login(username, password))
         .then(() => {
-          UserService.updateLoginAttempts(username, {
-            loginAttempts: 0,
-            lastLoginAttempsDate: null,
-            lastLoginDate: new Date()
-          })
-            .then(() => {
-              setNumFailLogin(0);
-              props.history.push("/profile");
-              window.location.reload();
-            })
-            .catch((e) => {
-              console.log(e);
-            })
+          props.history.push("/profile");
         })
         .catch(() => {
           setLoading(false);
-          UserService.getUser(username)
-            .then((response) => {
-              console.log(response.data);
-              console.log("loginAttempts", response.data[0].loginAttempts);
-              if (response.data[0].loginAttempts >= 3) {
-                props.history.push("/sendotp");
-                window.location.reload();
-              }
-              UserService.updateLoginAttempts(username, {
-                loginAttempts: numFailLogin + 1,
-                lastLoginAttempsDate: new Date()
-              })
-                .then(() => {
-                  setNumFailLogin(numFailLogin + 1);
-                })
-                .catch((e) => {
-                  console.log(e);
-                })
-            })
-            .catch((e) => {
-              console.log(e);
-            })
-        });
+        })
     } else {
       setLoading(false);
     }
@@ -104,65 +66,65 @@ const Login = (props) => {
 
   return (
     <div>
-        <div>
-          <div className="col-md-12">
-            <div className="card card-container">
-              <img
-                src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-                alt="profile-img"
-                className="profile-img-card"
-              />
+      <div>
+        <div className="col-md-12">
+          <div className="card card-container">
+            <img
+              src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+              alt="profile-img"
+              className="profile-img-card"
+            />
 
-              <Form onSubmit={handleLogin} ref={form}>
+            <Form onSubmit={handleLogin} ref={form}>
+              <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="username"
+                  value={username}
+                  onChange={onChangeUsername}
+                  validations={[required]}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <Input
+                  type="password"
+                  className="form-control"
+                  name="password"
+                  value={password}
+                  onChange={onChangePassword}
+                  validations={[required]}
+                />
+              </div>
+
+              <div className="form-group">
+                <Link to="/sendotp" className="nav-link">Reset password?</Link>
+              </div>
+
+              <div className="form-group">
+                <button className="btn btn-primary btn-block" disabled={loading}>
+                  {loading && (
+                    <span className="spinner-border spinner-border-sm"></span>
+                  )}
+                  <span>Login</span>
+                </button>
+              </div>
+
+              {message && (
                 <div className="form-group">
-                  <label htmlFor="username">Username</label>
-                  <Input
-                    type="text"
-                    className="form-control"
-                    name="username"
-                    value={username}
-                    onChange={onChangeUsername}
-                    validations={[required]}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="password">Password</label>
-                  <Input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    value={password}
-                    onChange={onChangePassword}
-                    validations={[required]}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <Link to="/sendotp" className="nav-link">Forgot password?</Link>
-                </div>
-
-                <div className="form-group">
-                  <button className="btn btn-primary btn-block" disabled={loading}>
-                    {loading && (
-                      <span className="spinner-border spinner-border-sm"></span>
-                    )}
-                    <span>Login</span>
-                  </button>
-                </div>
-
-                {message && (
-                  <div className="form-group">
-                    <div className="alert alert-danger" role="alert">
-                      {message}
-                    </div>
+                  <div className="alert alert-danger" role="alert">
+                    {message}
                   </div>
-                )}
-                <CheckButton style={{ display: "none" }} ref={checkBtn} />
-              </Form>
-            </div>
+                </div>
+              )}
+              <CheckButton style={{ display: "none" }} ref={checkBtn} />
+            </Form>
           </div>
         </div>
+      </div>
     </div>
   );
 };

@@ -23,9 +23,9 @@ const updateOTP = (email, data) => {
   return axios.put(API_URL+ "user/otp/" + `${email}`, data);
 };
 
-const updateLoginAttempts = (username, data) => {
-  return axios.put(API_URL+ "user/" + `${username}`, data);
-};
+// const updateLoginAttempts = (username, data) => {
+//   return axios.put(API_URL+ "user/" + `${username}`, data);
+// };
 
 const getUser = (username) => {
   return axios.get(API_URL + "user/" + `${username}`,{ headers: authHeader() });
@@ -39,6 +39,10 @@ const resetPassword = (email, data) => {
   return axios.put(API_URL + "resetpassword/" + `${email}`, data);
 }
 
+const updateEmployeeName = (id, data) => {
+  return axios.put(API_URL +`user/${id}`, data);
+};
+
 export default {
   getPublicContent,
   getUserBoard,
@@ -48,5 +52,5 @@ export default {
   getUser,
   checkOTPUser,
   resetPassword,
-  updateLoginAttempts,
+  updateEmployeeName,
 };

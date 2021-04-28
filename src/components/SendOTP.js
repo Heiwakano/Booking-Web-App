@@ -30,8 +30,6 @@ const SendOTP = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
-
-  const { message } = useSelector(state => state.message);
  
 
   const dispatch = useDispatch();
@@ -72,7 +70,7 @@ const SendOTP = () => {
         })
         .catch((e) => {
           setLoading(false);
-          console.log(e);
+          console.log(e.message);
         })
 
     } else {
@@ -116,13 +114,7 @@ const SendOTP = () => {
                       <span>Send OTP</span>
                     </button>
                   </div>
-                  {message && (
-                    <div className="form-group">
-                      <div className="alert alert-danger" role="alert">
-                        {message}
-                      </div>
-                    </div>
-                  )}
+                 
                   <CheckButton style={{ display: "none" }} ref={checkBtn} />
 
                 </Form>
