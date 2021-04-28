@@ -152,7 +152,7 @@ const AddBooking = (props) => {
             <h1>New Booking</h1>
           </Form.Row>
           <Form.Row>
-            <Col md="3">
+            <Col md="2">
               <Form.Label>Last Name</Form.Label>
             </Col>
             <Form.Group as={Col} className="inputData" md="6">
@@ -170,16 +170,18 @@ const AddBooking = (props) => {
                   })
                 }
               />
+            </Form.Group>
+            <Col style={{ textAlign: "left", margin: "auto 0" }}>
               {errors.GuestLastName?.type === "required" && (
-                <p>Need last name.</p>
+                <p className="error-validate">Need last name.</p>
               )}
               {errors.GuestLastName?.type === "pattern" && (
-                <p>Need text type[A-Z,a-z].</p>
+                <p className="error-validate">Need text type[A-Z,a-z].</p>
               )}
-            </Form.Group>
+            </Col>
           </Form.Row>
           <Form.Row>
-            <Col md="3">
+            <Col md="2">
               <Form.Label>First Name</Form.Label>
             </Col>
             <Form.Group as={Col} className="inputData" md="6">
@@ -197,17 +199,18 @@ const AddBooking = (props) => {
                   })
                 }
               />
+            </Form.Group>
+            <Col style={{ textAlign: "left", margin: "auto 0" }}>
               {errors.GuestFirstName?.type === "required" && (
-                <p>Need first name.</p>
+                <p className="error-validate">Need first name.</p>
               )}
               {errors.GuestFirstName?.type === "pattern" && (
-                <p>Need text type[A-Z,a-z].</p>
+                <p className="error-validate">Need text type[A-Z,a-z].</p>
               )}
-
-            </Form.Group>
+            </Col>
           </Form.Row>
           <Form.Row>
-            <Col md="3">
+            <Col md="2">
               <Form.Label>Check-In Date</Form.Label>
             </Col>
             <Form.Group as={Col} className="inputData" md="6">
@@ -220,13 +223,15 @@ const AddBooking = (props) => {
                 })
                 }
               />
-              {errors.CheckInDate?.type === "required" && (
-                <p>Need Check In.!</p>
-              )}
             </Form.Group>
+            <Col style={{ textAlign: "left", margin: "auto 0" }}>
+              {errors.CheckInDate?.type === "required" && (
+                <p className="error-validate">Need Check In!</p>
+              )}
+            </Col>
           </Form.Row>
           <Form.Row>
-            <Col md="3">
+            <Col md="2">
               <Form.Label>Check-Out Date</Form.Label>
             </Col>
             <Col className="inputData" md="6">
@@ -245,16 +250,18 @@ const AddBooking = (props) => {
                   }
                 })}
               />
+            </Col>
+            <Col style={{ textAlign: "left", margin: "auto 0" }}>
               {errors.CheckOutDate?.type === "moreThanCheckIn" && (
-                <p>Check Out must more than Check In.</p>
+                <p className="error-validate">Check Out must more than Check In.</p>
               )}
               {errors.CheckOutDate?.type === "required" && (
-                <p>Need Check Out.!</p>
+                <p className="error-validate">Need Check Out!</p>
               )}
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col md="3">
+            <Col md="2">
               <Form.Label>Children</Form.Label>
             </Col>
             <Col className="inputData" md="6">
@@ -270,13 +277,15 @@ const AddBooking = (props) => {
                 })}
 
               />
+            </Col>
+            <Col style={{ textAlign: "left", margin: "auto 0" }}>
               {errors.NumberOfChildren?.type === "positive" && (
-                <p>Need number or 0</p>
+                <p className="error-validate">Need number or 0</p>
               )}
             </Col>
           </Form.Row>
           <Form.Row>
-            <Col md="3">
+            <Col md="2">
               <Form.Label>Adults</Form.Label>
             </Col>
             <Col className="inputData" md="6">
@@ -292,28 +301,29 @@ const AddBooking = (props) => {
                 })}
 
               />
+            </Col>
+            <Col style={{ textAlign: "left", margin: "auto 0" }}>
               {errors.NumberOfAdults?.type === "positive" && (
-                <p>Need number or 0</p>
+                <p className="error-validate">Need number more than 0</p>
               )}
-
             </Col>
           </Form.Row>
-          <Form.Row>
-            <Col md="3">
+          <Form.Row className="Row_Fix_Height">
+            <Col md="2">
               <Form.Label>Room</Form.Label>
             </Col>
-            <Col>
+            <Col style={{ textAlign: "left", margin: "auto 0" }}>
               <Form.Label>{getAvaiClicked ? room.RoomNumber + " at ฿" + room.Price + " per night." : null}</Form.Label>
             </Col>
 
           </Form.Row>
-          <Form.Row>
+          <Form.Row style={{ textAlign: "left", margin: "3% 0 0 6%" }}>
             <ThemeProvider theme={theme}>
               <Button
                 variant="contained"
                 type="submit"
                 size="large"
-                name="getAvailableBut" 
+                name="getAvailableBut"
                 style={{ background: '#33FF8C', color: 'white' }} >
                 Get Available Room
             </Button>

@@ -15,8 +15,9 @@ import {
   SET_PROFILEPICTURE,
 } from "../actions/types";
 
+import Swal from 'sweetalert2';
 
-const Profile = () => {
+const Profile = (props) => {
   const { user: currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -115,12 +116,23 @@ const Profile = () => {
         const firstname = getValues("firstname");
         const lastname = getValues("lastname");
         const user = { ...currentUser, firstname: firstname, lastname: lastname };
-        dispatch({
+        Swal.fire(
+          'Saved!',
+          'Profile has been updated.',
+          'success'
+        )
+        .then(()=>dispatch({
           type: SET_USERNAME,
           payload: { user: user },
-        })
+        }))
       })
       .catch(e => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Something went wrong!',
+          // footer: '<a href>Why do I have this issue?</a>'
+        })
         console.log(e);
       });
   }
@@ -138,7 +150,7 @@ const Profile = () => {
       </header>
 
       <Grid container justify="center" alignItems="center" direction="column">
-        <Avatar alt={currentUser.username} src={currentUser.profilePicture} className={classes.large}  />
+        <Avatar alt={currentUser.username} src={currentUser.profilePicture} className={classes.large} />
 
         <UploadImagesMUI email={currentUser.email} user={currentUser} />
       </Grid>
@@ -224,13 +236,22 @@ const Profile = () => {
             />
           </Form.Group>
         </Form.Row>
-        <Form.Row>
-          <Col md="1" className="button-center">
+        <Form.Row style={{ textAlign: "center"}}>
+          <Col>
             <Button as="input"
               type="submit"
               value="Save"
+              variant="success"
+            />{' '}
+          <Button as="input"
+              type="button"
+              value="Back"
+              variant="secondary"
+              onClick={()=>props.history.push("/")}
+              style={{ marginLeft: "2%"}}
             />{' '}
           </Col>
+          
         </Form.Row>
 
       </Form>

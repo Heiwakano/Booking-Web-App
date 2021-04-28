@@ -213,7 +213,7 @@ const EditBooking = props => {
                         <h1>Booking for {getValues("GuestFirstName")} {getValues("GuestLastName")}</h1>
                     </Form.Row>
                     <Form.Row className="Row_Fix_Height">
-                        <Col md="3">
+                        <Col md="2">
                             <Form.Label>Last Name</Form.Label>
                         </Col>
                         <Form.Group as={Col} className="inputData" md="6">
@@ -255,7 +255,7 @@ const EditBooking = props => {
                         </Form.Group>
                     </Form.Row>
                     <Form.Row className="Row_Fix_Height">
-                        <Col md="3">
+                        <Col md="2">
                             <Form.Label>First Name</Form.Label>
                         </Col>
                         <Form.Group as={Col} className="inputData" md="6">
@@ -269,7 +269,7 @@ const EditBooking = props => {
                         </Form.Group>
                     </Form.Row>
                     <Form.Row className="Row_Fix_Height">
-                        <Col md="3">
+                        <Col md="2">
                             <Form.Label>Check-In</Form.Label>
                         </Col>
                         <Form.Group as={Col} className="inputData" md="6">
@@ -283,7 +283,7 @@ const EditBooking = props => {
                         </Form.Group>
                     </Form.Row>
                     <Form.Row className="Row_Fix_Height">
-                        <Col md="3">
+                        <Col md="2">
                             <Form.Label>Check-Out</Form.Label>
                         </Col>
                         <Form.Group as={Col} className="inputData" md="6">
@@ -297,7 +297,7 @@ const EditBooking = props => {
                         </Form.Group>
                     </Form.Row>
                     <Form.Row className="Row_Fix_Height">
-                        <Col md="3">
+                        <Col md="2">
                             <Form.Label>Children</Form.Label>
                         </Col>
                         <Form.Group as={Col} className="inputData" md="6">
@@ -311,7 +311,7 @@ const EditBooking = props => {
                         </Form.Group>
                     </Form.Row>
                     <Form.Row className="Row_Fix_Height">
-                        <Col md="3">
+                        <Col md="2">
                             <Form.Label>Adults</Form.Label>
                         </Col>
                         <Form.Group as={Col} className="inputData" md="6">
@@ -325,14 +325,14 @@ const EditBooking = props => {
                         </Form.Group>
                     </Form.Row>
                     <Form.Row className="Row_Fix_Height">
-                        <Col md="3">
+                        <Col md="2">
                             <Form.Label>Room</Form.Label>
                         </Col>
-                        <Col>
+                        <Col style={{ textAlign: "left", margin: "auto 0"}}>
                             <Form.Label>{getValues("RoomNumber")} at ฿ {getValues("Price")} per night.</Form.Label>
                         </Col>
                     </Form.Row>
-                    <Form.Row>
+                    <Form.Row style={{ textAlign: "left", marginLeft: "6%"}}>
                         {status === "Booked" ? currentUser ?
                             (
                                 <Col>
@@ -360,7 +360,7 @@ const EditBooking = props => {
                                 </Col>
                             ) : (<Col></Col>)}
                     </Form.Row>
-                    <Form.Row>
+                    <Form.Row style={{ textAlign: "left", marginLeft: "6%"}}>
                         <Col>
                             {currentUser ?
                                 <ThemeProvider theme={theme}>

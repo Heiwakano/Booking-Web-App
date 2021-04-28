@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import BookingDataService from "../services/BookingDataService";
 
 import { Col, Row, Button, Container, Form, Modal } from "react-bootstrap";
+
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+
+
 
 const CheckOut = props => {
 
@@ -94,7 +97,7 @@ const CheckOut = props => {
     const CheckInDate = new Date(booking.CheckInDate);
     var dd = String(CheckInDate.getDate()).padStart(2, '0');
     const timeCheckIn = CheckInDate.getTime();
-    const isCheckInMorethanToday = Math.floor((CheckInDate.getTime() - todayTime) / (1000 * 60 * 60 * 24)) > 0;
+    const isCheckInMorethanToday = Math.floor((CheckInDate.getTime() - todayTime) / (1000 * 60 * 60 * 24)) >= 0;
     const checkIn = isCheckInMorethanToday ?
         dd + " " + monthNames[CheckInDate.getMonth()] + " " + " (in " + (Math.floor((CheckInDate.getTime() - todayTime) / (1000 * 60 * 60 * 24))).toString() + " days)"
         : !isCheckInMorethanToday ?
@@ -105,7 +108,7 @@ const CheckOut = props => {
     const CheckOutDate = new Date(booking.CheckOutDate);
     dd = String(CheckOutDate.getDate()).padStart(2, '0');
     const timeCheckOut = CheckOutDate.getTime();
-    const isCheckOutMorethanToday = Math.floor((CheckOutDate.getTime() - todayTime) / (1000 * 60 * 60 * 24)) > 0;
+    const isCheckOutMorethanToday = Math.floor((CheckOutDate.getTime() - todayTime) / (1000 * 60 * 60 * 24)) >= 0;
     var checkOut = isCheckOutMorethanToday ?
         "" + dd + " " +
         monthNames[CheckOutDate.getMonth()] + " (in " + (Math.floor((CheckOutDate.getTime() - todayTime) / (1000 * 60 * 60 * 24))).toString() + " days)"
@@ -150,11 +153,10 @@ const CheckOut = props => {
             <Modal.Footer>
                 <Row className="button-left">
                     <Col>
-                        <Button as="input" type="button" value="Confirm Check-Out" onClick={updateStatus} />{' '}
+                        <Button as="input" type="button" value="Confirm Check-Out" onClick={updateStatus} variant="success"/>{' '}
                     </Col>
                     <Col>
-                        <Button onClick={props.onHide}>Close</Button>
-                        {/* <Button as="input" type="button" value="Back" onClick={() => props.history.push("/bookings/" + booking.id)} />{' '} */}
+                        <Button onClick={props.onHide} variant="secondary">Close</Button>
                     </Col>
                 </Row>
 

@@ -32,10 +32,13 @@ import IconButton from '@material-ui/core/IconButton';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { useSelector } from "react-redux";
 
 import CheckOut from "./CheckOutv1";
 
 const Home = (props) => {
+
+  const { user: currentUser } = useSelector((state) => state.auth);
 
   const [bookings, setBookings] = useState([]);
   const [modalShow, setModalShow] = useState(false);
@@ -203,25 +206,49 @@ const Home = (props) => {
       <TableHead>
         <TableRow >
           {columns1.map((headCell) => (
-            <TableCell
-              key={headCell.id}
-              align={headCell.numeric ? 'right' : 'left'}
-              sortDirection={orderBy1 === headCell.id ? order1 : false}
-            >
-              <TableSortLabel
-                hideSortIcon={headCell.id === "actions"}
-                active={orderBy1 === headCell.id}
-                direction={orderBy1 === headCell.id ? order1 : 'asc'}
-                onClick={createSortHandler(headCell.id)}
+            currentUser ? (
+              <TableCell
+                key={headCell.id}
+                align={headCell.numeric ? 'right' : 'left'}
+                sortDirection={orderBy1 === headCell.id ? order1 : false}
               >
-                {headCell.label}
-                {orderBy1 === headCell.id ? (
-                  <span className={classes.visuallyHidden}>
-                    {order1 === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                  </span>
-                ) : null}
-              </TableSortLabel>
-            </TableCell>
+                <TableSortLabel
+                  hideSortIcon={headCell.id === "actions"}
+                  active={orderBy1 === headCell.id}
+                  direction={orderBy1 === headCell.id ? order1 : 'asc'}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy1 === headCell.id ? (
+                    <span className={classes.visuallyHidden}>
+                      {order1 === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </span>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
+            ) : (
+              headCell.id !== 'actions' &&
+              <TableCell
+                key={headCell.id}
+                align={headCell.numeric ? 'right' : 'left'}
+                sortDirection={orderBy1 === headCell.id ? order1 : false}
+              >
+                <TableSortLabel
+                  hideSortIcon={headCell.id === "actions"}
+                  active={orderBy1 === headCell.id}
+                  direction={orderBy1 === headCell.id ? order1 : 'asc'}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy1 === headCell.id ? (
+                    <span className={classes.visuallyHidden}>
+                      {order1 === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </span>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
+            )
+
           ))}
         </TableRow>
       </TableHead>
@@ -238,25 +265,49 @@ const Home = (props) => {
       <TableHead>
         <TableRow >
           {columns2.map((headCell) => (
-            <TableCell
-              key={headCell.id}
-              align={headCell.numeric ? 'right' : 'left'}
-              sortDirection={orderBy2 === headCell.id ? order2 : false}
-            >
-              <TableSortLabel
-                hideSortIcon={headCell.id === "actions"}
-                active={orderBy2 === headCell.id}
-                direction={orderBy2 === headCell.id ? order2 : 'asc'}
-                onClick={createSortHandler(headCell.id)}
+            currentUser ? (
+              <TableCell
+                key={headCell.id}
+                align={headCell.numeric ? 'right' : 'left'}
+                sortDirection={orderBy2 === headCell.id ? order2 : false}
               >
-                {headCell.label}
-                {orderBy2 === headCell.id ? (
-                  <span className={classes.visuallyHidden}>
-                    {order2 === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                  </span>
-                ) : null}
-              </TableSortLabel>
-            </TableCell>
+                <TableSortLabel
+                  hideSortIcon={headCell.id === "actions"}
+                  active={orderBy2 === headCell.id}
+                  direction={orderBy2 === headCell.id ? order2 : 'asc'}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy2 === headCell.id ? (
+                    <span className={classes.visuallyHidden}>
+                      {order2 === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </span>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
+            ) : (
+              headCell.id !== 'actions' &&
+              <TableCell
+                key={headCell.id}
+                align={headCell.numeric ? 'right' : 'left'}
+                sortDirection={orderBy2 === headCell.id ? order2 : false}
+              >
+                <TableSortLabel
+                  hideSortIcon={headCell.id === "actions"}
+                  active={orderBy2 === headCell.id}
+                  direction={orderBy2 === headCell.id ? order2 : 'asc'}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy2 === headCell.id ? (
+                    <span className={classes.visuallyHidden}>
+                      {order2 === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </span>
+                  ) : null}
+                </TableSortLabel>
+              </TableCell>
+            )
+
           ))}
         </TableRow>
       </TableHead>
@@ -499,15 +550,15 @@ const Home = (props) => {
       return booking.id.toString() === id
     });
     return toast.error('Error occurs while checking in ' + bookingCheckedIn.name + " room " + bookingCheckedIn.RoomNumber, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
-}
+  }
 
   const checkOutBooking = (e) => {
     const idx = e.currentTarget.name;
@@ -580,9 +631,9 @@ const Home = (props) => {
                                   </TableRow>
                                 </TableCell>
                                 <TableCell align="left">{row.RoomNumber}</TableCell>
-                                <TableCell align="left">
+                                {currentUser && <TableCell align="left">
                                   <Button variant="contained" size="small" onClick={checkInBooking} name={row.id} color="primary" className={classes.margin}>Check In</Button>
-                                </TableCell>
+                                </TableCell>}
                               </TableRow>
                             );
                           })}
@@ -654,6 +705,7 @@ const Home = (props) => {
                                   <TableRow>
                                     <TableCell align="left" padding="none" className={classes.paddingCell}>
                                       <Typography className={classes.pos} color="textSecondary">
+
                                         Arrived {new Date(row.CheckInDate).getDate()} {monthNames[new Date(row.CheckInDate).getMonth()]}
                                         {Math.floor((new Date(row.CheckInDate).getTime() - todayTime) / (1000 * 60 * 60 * 24)) > 0 ?
                                           " (in " + (Math.floor((new Date(row.CheckInDate).getTime() - todayTime) / (1000 * 60 * 60 * 24))).toString() + " days)"
@@ -668,9 +720,9 @@ const Home = (props) => {
                                   </TableRow>
                                 </TableCell>
                                 <TableCell align="left">{row.RoomNumber}</TableCell>
-                                <TableCell align="left">
+                                {currentUser && <TableCell align="left">
                                   <Button variant="contained" size="small" onClick={checkOutBooking} name={index} color="secondary" className={classes.margin}>Check Out</Button>
-                                </TableCell>
+                                </TableCell>}
                               </TableRow>
                             );
                           })}

@@ -28,14 +28,6 @@ const UploadImages = (props) => {
     setIsError(false);
   }
 
-  // useEffect(() => {
-  //   setCurrentFile(undefined);
-  //   setProgress(0);
-  //   setMessage("");
-  //   setIsError(false);
-  //   console.log("use effect!!");
-  // }, [props]);
-
   const upload = () => {
     setProgress(0);
 
@@ -98,7 +90,8 @@ const UploadImages = (props) => {
         <Button
           className="btn-choose"
           variant="outlined"
-          component="span" >
+          component="span" 
+          style={{marginTop: "7%"}}>
           Choose Image
           </Button>
       </label>

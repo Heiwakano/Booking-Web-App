@@ -587,13 +587,13 @@ const BookingsList = (props) => {
     return (
         <Container className="sheet padding-10mm">
             <Row>
-                <Col style={{ "marginRight": "52%" }}>
+                <Col style={{ textAlign: "left" }}>
                     <Typography className={classes.title} variant="h3" id="tableTitle" component="div">
                         Bookings
                     </Typography>
 
                 </Col>
-                <Col className="justify-content-md-center ">
+                <Col style={{ textAlign: "right" }}>
                     <Button startIcon={<AddCircleIcon color="error" fontSize="large" />} href="/createBooking/" style={{ display: !currentUser ? "none" : null }} size="large">
                         <h4 style={{ margin: 0 }}>New Booking</h4>
                     </Button>
@@ -620,13 +620,13 @@ const BookingsList = (props) => {
                 </Col>
 
                 <Col>
-                    <Col md="auto">
+                    <Col style={{ textAlign: "left" }}>
                         <button
                             className="btn btn-outline-secondary"
                             type="button"
                             onClick={findBooking}
                         >
-                            Search
+                            Search Booking
                             </button>
                     </Col>
                 </Col>

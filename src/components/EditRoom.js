@@ -81,11 +81,7 @@ const EditRoom = props => {
 
   }, [props.match.params.id]);
 
-  const updateRoom = (event) => {
-
-    event.preventDefault();
-    event.stopPropagation();
-
+  const updateRoom = () => {
     const data = {
       RoomNumber: getValues("RoomNumber"),
       AdultsCapacity: getValues("AdultsCapacity"),
@@ -164,12 +160,12 @@ const EditRoom = props => {
         <Redirect to="/rooms" />
       ) : (
         <div>
-          <Form noValidate onSubmit={(event) => handleSubmit(updateRoom(event))}>
+          <Form noValidate onSubmit={handleSubmit(updateRoom)}>
             <Form.Row className="header-create">
               <h1>Room {currentRoom}</h1>
             </Form.Row>
             <Form.Row>
-              <Col md="3">
+              <Col md="2">
                 <Form.Label>Room Number</Form.Label>
               </Col>
               <Form.Group as={Col} className="inputData" md="6">
@@ -197,28 +193,28 @@ const EditRoom = props => {
                       }
                     })
                   }
-
                 />
-                {errors.RoomNumber?.type === "maxLength" && (
-                  <p>Max room number length eqaul to 3.</p>
+              </Form.Group>
+              <Col style={{ textAlign: "left", margin: "auto 0" }}>
+              {errors.RoomNumber?.type === "maxLength" && (
+                  <p className="error-validate">Max room number length eqaul to 3.</p>
                 )}
                 {errors.RoomNumber?.type === "required" && (
-                  <p>Need room number.</p>
+                  <p className="error-validate">Need room number.</p>
                 )}
                 {errors.RoomNumber?.type === "pattern" && (
-                  <p>Need number type[0-9].</p>
+                  <p className="error-validate">Need number type[0-9].</p>
                 )}
                 {errors.RoomNumber?.type === "positive" && (
-                  <p>Room number must not be negative.</p>
+                  <p className="error-validate">Room number must not be negative.</p>
                 )}
-              </Form.Group>
+            </Col>
             </Form.Row>
             <Form.Row>
-              <Col md="3">
+              <Col md="2">
                 <Form.Label>Adults Capacity</Form.Label>
               </Col>
               <Form.Group as={Col} className="inputData" md="6">
-
                 <Form.Control
                   as="input"
                   type="number"
@@ -232,20 +228,21 @@ const EditRoom = props => {
                   })
                   }
                 />
-                {errors.AdultsCapacity?.type === "required" && (
-                  <p>Need number or 0.</p>
+              </Form.Group>
+              <Col style={{ textAlign: "left", margin: "auto 0" }}>
+              {errors.AdultsCapacity?.type === "required" && (
+                  <p className="error-validate">Need number or 0.</p>
                 )}
                 {errors.AdultsCapacity?.type === "positive" && (
-                  <p>Need number more than or eqaul 0.</p>
+                  <p className="error-validate">Need number more than or eqaul 0.</p>
                 )}
-              </Form.Group>
+            </Col>
             </Form.Row>
             <Form.Row>
-              <Col md="3">
+              <Col md="2">
                 <Form.Label>Children Capacity</Form.Label>
               </Col>
               <Form.Group as={Col} className="inputData" md="6">
-
                 <Form.Control
                   as="input"
                   type="number"
@@ -260,16 +257,18 @@ const EditRoom = props => {
                     })
                   }
                 />
-                {errors.ChildrenCapacity?.type === "required" && (
-                  <p>Need number or 0.</p>
+              </Form.Group>
+              <Col style={{ textAlign: "left", margin: "auto 0" }}>
+              {errors.ChildrenCapacity?.type === "required" && (
+                  <p className="error-validate">Need number or 0.</p>
                 )}
                 {errors.ChildrenCapacity?.type === "positive" && (
-                  <p>Need number more than or eqaul 0.</p>
+                  <p className="error-validate">Need number more than or eqaul 0.</p>
                 )}
-              </Form.Group>
+            </Col>
             </Form.Row>
             <Form.Row>
-              <Col md="3">
+              <Col md="2">
                 <Form.Label>Price</Form.Label>
               </Col>
               <Form.Group as={Col} className="inputData" md="6">
@@ -289,15 +288,17 @@ const EditRoom = props => {
                     })
                   }
                 />
-                {errors.Price?.type === "required" && (
-                  <p>Need price</p>
+              </Form.Group>
+              <Col style={{ textAlign: "left", margin: "auto 0" }}>
+              {errors.Price?.type === "required" && (
+                  <p className="error-validate">Need price</p>
                 )}
                 {errors.Price?.type === "positive" && (
-                  <p>Need price more than or eqaul 0.</p>
+                  <p className="error-validate">Need price more than or eqaul 0.</p>
                 )}
-              </Form.Group>
+            </Col>
             </Form.Row>
-            <Form.Row>
+            <Form.Row style={{ textAlign: "left", marginLeft: "6%" }}>
 
             {currentUser && currentUser.roles.includes('moderator') &&<ThemeProvider theme={theme}>
                 <Button variant="contained" type="submit" size="large" name="save" color="primary" >Save</Button>

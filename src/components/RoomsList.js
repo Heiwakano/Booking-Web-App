@@ -539,14 +539,14 @@ const RoomsList = (props) => {
   return (
     <Container className="sheet padding-10mm">
       <Row>
-        <Col style={{ "marginRight": "59%" }}>
+        <Col style={{ textAlign: "left" }}>
           <Typography className={classes.title} variant="h3" id="tableTitle" component="div">
             Rooms
           </Typography>
 
         </Col>
 
-        {currentUser && currentUser.roles.includes('moderator') && <Col className="justify-content-md-center">
+        {currentUser && currentUser.roles.includes('moderator') && <Col style={{ textAlign: "right" }}>
           <Button startIcon={<AddCircleIcon color="error" fontSize="large" />} href="/createRoom/" style={{ display: !currentUser ? "none" : null }} size="large">
             <h4 style={{ margin: 0 }}>New Room</h4>
           </Button></Col>}
@@ -562,13 +562,13 @@ const RoomsList = (props) => {
           />
         </Col>
         <Col>
-          <Col md="auto">
+          <Col style={{ textAlign: "left" }}>
             <button
               className="btn btn-outline-secondary"
               type="button"
               onClick={findByRoomNumber}
             >
-              Search
+              Search Room
             </button>
           </Col>
         </Col>
