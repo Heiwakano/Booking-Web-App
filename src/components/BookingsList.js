@@ -34,6 +34,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import SearchIcon from '@material-ui/icons/Search';
 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -41,7 +42,7 @@ import withReactContent from 'sweetalert2-react-content';
 const BookingsList = (props) => {
     const [bookings, setBookings] = useState([]);
     const [searchName, setSearchName] = useState("");
-    const [dispStatusButton, setDispStatusButton] = useState("-Any Status-")
+    const [dispStatusButton, setDispStatusButton] = useState("Any Status")
     const [searchStatus, setSearchStatus] = useState("");
 
 
@@ -51,7 +52,7 @@ const BookingsList = (props) => {
     const [orderBy, setOrderBy] = useState('name');
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(9);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     //sweetalert
     const MySwal = withReactContent(Swal);
@@ -151,7 +152,7 @@ const BookingsList = (props) => {
 
     const StyledTableCell = withStyles((theme) => ({
         head: {
-            backgroundColor: "#FA53A0",
+            backgroundColor: "#3b5998",
             color: theme.palette.common.white,
         },
         body: {
@@ -161,7 +162,7 @@ const BookingsList = (props) => {
 
     const StyledTableRow = withStyles((theme) => ({
         root: {
-            backgroundColor: "#EFEBE0",
+            backgroundColor: "white",
             color: "black"
         },
     }))(TableRow);
@@ -201,7 +202,7 @@ const BookingsList = (props) => {
             id: 'actions',
             label: 'Actions',
             minWidth: 170,
-            align: 'left',
+            align: 'right',
         },
     ];
 
@@ -416,7 +417,7 @@ const BookingsList = (props) => {
 
         switch (status) {
             case "":
-                setDispStatusButton("-Any Status-");
+                setDispStatusButton("Any Status");
                 break;
             case "1":
                 setDispStatusButton("Booked");
@@ -610,8 +611,8 @@ const BookingsList = (props) => {
                     />
                 </Col>
                 <Col md="auto">
-                    <DropdownButton id="dropdown-item-button" title={dispStatusButton} variant="flat">
-                        <Dropdown.Item as="button" name="" onClick={onClickStatus}>-Any Status-</Dropdown.Item>
+                    <DropdownButton id="dropdown-item-button" title={dispStatusButton} variant="flat" >
+                        <Dropdown.Item as="button" name="" onClick={onClickStatus}>Any Status</Dropdown.Item>
                         <Dropdown.Item as="button" name="1" onClick={onClickStatus}>Booked</Dropdown.Item>
                         <Dropdown.Item as="button" name="2" onClick={onClickStatus}>CheckedIn</Dropdown.Item>
                         <Dropdown.Item as="button" name="3" onClick={onClickStatus}>CheckedOut</Dropdown.Item>
@@ -626,7 +627,7 @@ const BookingsList = (props) => {
                             type="button"
                             onClick={findBooking}
                         >
-                            Search Booking
+                            <SearchIcon /> Search Booking
                             </button>
                     </Col>
                 </Col>
@@ -711,8 +712,9 @@ const BookingsList = (props) => {
                                                         }
                                                     </StyledTableCell>
                                                     <StyledTableCell align="left">{row.Label}</StyledTableCell>
-                                                    {currentUser && <StyledTableCell align="left">{
+                                                    {currentUser && <StyledTableCell align="right">{
                                                         <Button startIcon={<EditIcon fontSize="small" />} onClick={() => openBooking(row.id)} size="small" color="#90ADC6" variant="contained">
+                                                        Edit
                                                         </Button>
                                                     }</StyledTableCell>}
                                                 </StyledTableRow>
@@ -727,7 +729,7 @@ const BookingsList = (props) => {
                             </Table>
                         </TableContainer>
                         <TablePagination
-                            rowsPerPageOptions={[9]}
+                            rowsPerPageOptions={[10]}
                             component="div"
                             // colSpan={3}
                             count={rows.length}

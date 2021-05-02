@@ -26,6 +26,7 @@ const CheckOTP = () => {
   const [otp, setOTP] = useState("");
 
   const { email } = useSelector(state => state.auth);
+  const { ref } = useSelector(state => state.auth);
   const { message } = useSelector(state => state.message);
 
   const [isSubmit, setIsSubmit] = useState(false);
@@ -83,6 +84,26 @@ const CheckOTP = () => {
                   value={otp}
                   onChange={onChangeOTP}
                   validations={[required]}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="otp">Sent to Email :</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="otp"
+                  value={email}
+                  disabled
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="otp">Ref :</label>
+                <Input
+                  type="text"
+                  className="form-control"
+                  name="otp"
+                  value={ref}
+                  disabled
                 />
               </div>
 

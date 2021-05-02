@@ -37,6 +37,10 @@ const AddRoom = (props) => {
           //   padding: '0 30px',
           //   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
         },
+        colorInherit: {
+          background: '#5cb85c',
+          color: 'white',
+        }
       },
     },
   });
@@ -210,11 +214,11 @@ const AddRoom = (props) => {
             </Col>
           </Form.Row>
           <Form.Row style={{ textAlign: "left", marginLeft: "6%" }}>
-            {currentUser && currentUser.roles.includes('moderator') && <ThemeProvider theme={theme}>
-              <Button type="submit" variant="contained" size="large" name="createroom" style={{ background: '#7CFC00', color: 'white' }} ><b>Create Room</b></Button>
+            {currentUser && currentUser.roles.includes('manager') && <ThemeProvider theme={theme}>
+              <Button type="submit" variant="contained" size="large" name="createroom" color="inherit"><b>Create Room</b></Button>
             </ThemeProvider>}
             <ThemeProvider theme={theme}>
-              <Button variant="contained" size="large" onClick={() => props.history.push("/rooms")} name="Back" color="default" >Back</Button>
+              <Button variant="outlined" size="large" onClick={() => props.history.push("/rooms")} name="Back" color="default" >Back</Button>
             </ThemeProvider>
           </Form.Row>
 

@@ -61,6 +61,15 @@ const EditBooking = props => {
                     //   padding: '0 30px',
                     //   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
                 },
+                colorInherit: {
+                    background: '#5cb85c',
+                    color: 'white',
+                },
+                contained: {
+                    '&:hover': {
+                        backgroundColor: "#1e822a",
+                    },
+                },
             },
         },
     });
@@ -159,7 +168,7 @@ const EditBooking = props => {
                         title: 'Oops...',
                         text: 'Something went wrong!',
                         // footer: '<a href>Why do I have this issue?</a>'
-                      })
+                    })
                     console.log(e);
                 })
 
@@ -197,7 +206,7 @@ const EditBooking = props => {
                             title: 'Oops...',
                             text: 'Something went wrong!',
                             // footer: '<a href>Why do I have this issue?</a>'
-                          })
+                        })
                         console.log(e);
                     });
 
@@ -328,22 +337,22 @@ const EditBooking = props => {
                         <Col md="2">
                             <Form.Label>Room</Form.Label>
                         </Col>
-                        <Col style={{ textAlign: "left", margin: "auto 0"}}>
+                        <Col style={{ textAlign: "left", margin: "auto 0" }}>
                             <Form.Label>{getValues("RoomNumber")} at ฿ {getValues("Price")} per night.</Form.Label>
                         </Col>
                     </Form.Row>
-                    <Form.Row style={{ textAlign: "left", marginLeft: "6%"}}>
+                    <Form.Row style={{ textAlign: "left", marginLeft: "6%" }}>
                         {status === "Booked" ? currentUser ?
                             (
                                 <Col>
                                     <ThemeProvider theme={theme}>
-                                        <Button variant="contained" type="submit" size="large" onClick={checkTypeOnClickedButton} name="Check In" color="primary" >Check In</Button>
+                                        <Button variant="contained" type="submit" size="large" onClick={checkTypeOnClickedButton} name="Check In" color="inherit" >Check In</Button>
                                     </ThemeProvider>
                                     <ThemeProvider theme={theme}>
                                         <Button variant="contained" type="submit" size="large" onClick={checkTypeOnClickedButton} name="Cancel Booking" style={{ background: '#f9e154', color: 'black' }} >Cancel Booking</Button>
                                     </ThemeProvider>
                                     <ThemeProvider theme={theme}>
-                                        <Button variant="contained" size="large" onClick={() => props.history.push("/bookings")} name="Back" color="default" >Back</Button>
+                                        <Button variant="outlined" size="large" onClick={() => props.history.push("/bookings")} name="Back" color="default" >Back</Button>
                                     </ThemeProvider>
                                 </Col>
 
@@ -360,7 +369,7 @@ const EditBooking = props => {
                                 </Col>
                             ) : (<Col></Col>)}
                     </Form.Row>
-                    <Form.Row style={{ textAlign: "left", marginLeft: "6%"}}>
+                    <Form.Row style={{ textAlign: "left", marginLeft: "6%" }}>
                         <Col>
                             {currentUser ?
                                 <ThemeProvider theme={theme}>

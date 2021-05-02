@@ -19,6 +19,8 @@ const UploadImages = (props) => {
     setCurrentFile(event.target.files[0]);
     setProgress(0);
     setMessage("");
+    upload(event.target.files[0]);
+    
   }
 
   const refresh = () => {
@@ -28,7 +30,7 @@ const UploadImages = (props) => {
     setIsError(false);
   }
 
-  const upload = () => {
+  const upload = (currentFile) => {
     setProgress(0);
 
     UploadService.upload(currentFile, (event) => {
@@ -98,7 +100,7 @@ const UploadImages = (props) => {
       <div className="file-name">
         {currentFile ? currentFile.name : null}
       </div>
-      <Button
+      {/* <Button
         className="btn-upload"
         color="primary"
         variant="contained"
@@ -106,7 +108,7 @@ const UploadImages = (props) => {
         disabled={!currentFile}
         onClick={upload}>
         Upload
-        </Button>
+        </Button> */}
 
       {currentFile && (
         <Box className="my20" display="flex" alignItems="center">

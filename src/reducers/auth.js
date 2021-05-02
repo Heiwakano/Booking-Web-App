@@ -17,7 +17,7 @@ const initialState = user
   ? { isLoggedIn: true, user }
   : { isLoggedIn: false, 
     user: null, otp: "", 
-    email: "", 
+    email: "", ref: "",
     username: "", 
     time: "",
   };
@@ -47,6 +47,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         email: payload.email,
+        ref: payload.ref,
       };
     case REGISTER_SUCCESS:
       return {

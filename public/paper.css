@@ -23,6 +23,7 @@ body.legal.landscape  .sheet { width: 357mm; height: 215mm }
 /** Custom sizes **/
 body.Paper            .sheet { width: 297mm; height: 255mm; border-radius: 2%; text-align: center }
 /** Padding area **/
+.sheet.padding-0mm { padding: 0mm }
 .sheet.padding-10mm { padding: 10mm }
 .sheet.padding-15mm { padding: 15mm }
 .sheet.padding-20mm { padding: 20mm }

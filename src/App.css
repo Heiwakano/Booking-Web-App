@@ -141,7 +141,14 @@ tbody {
   border: 1px solid #ced4da;
 }
 nav .navbar-nav li a {
-  color: black !important;
+  color: rgb(153, 130, 187) !important;
+}
+.nav-link:hover {
+  color: white !important;
+}
+.reset-pass-link:hover {
+  color: blue !important;
+  text-decoration: none;
 }
 .button-booking {
   margin: 0 3% 3% 0;
@@ -149,3 +156,12 @@ nav .navbar-nav li a {
 .col-md-2 {
   margin: auto 0;  
   }
+.dropdown-item:hover {
+  background-color: rgb(175, 165, 189) !important;
+}
+.dropdown-item:active {
+  background-color: rgb(175, 165, 189) !important;
+}
+#dropdown-item-button {
+  width: 158px;
+}

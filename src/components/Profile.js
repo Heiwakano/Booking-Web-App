@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Redirect } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 
@@ -12,12 +12,12 @@ import { useForm } from "react-hook-form";
 import UserService from "../services/user.service";
 import {
   SET_USERNAME,
-  SET_PROFILEPICTURE,
 } from "../actions/types";
 
 import Swal from 'sweetalert2';
 
 const Profile = (props) => {
+  const baseUrl = "http://localhost:8080/api/get/profilePicture/";
   const { user: currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -71,39 +71,11 @@ const Profile = (props) => {
     }
   });
 
-  useEffect(() => {
-    getUser();
-  }, []);
-
   if (!currentUser) {
     return <Redirect to="/login" />;
   }
 
   console.log("user", currentUser);
-
-  const getUser = () => {
-    UserService.getUser(currentUser.username)
-      .then(response => {
-        const profilePicture = response.data[0].employees[0].profilePicture;
-        const firstname = response.data[0].employees[0].firstName;
-        const lastname = response.data[0].employees[0].lastName;
-        setValue("firstname", firstname, { shouldDirty: true });
-        setValue("lastname", lastname, { shouldDirty: true });
-        const user = {
-          ...currentUser,
-          profilePicture: profilePicture,
-          firstname: firstname,
-          lastname: lastname,
-        };
-        dispatch({
-          type: SET_PROFILEPICTURE,
-          payload: { user: user }
-        })
-      })
-      .catch((e) => {
-        console.log(e);
-      })
-  };
 
   const editName = () => {
     const data = {
@@ -143,14 +115,14 @@ const Profile = (props) => {
     <div className="sheet padding-10mm">
       <header className="jumbotron">
         <h3>
-          <strong>{currentUser.username}</strong> Profile
+          <strong>{currentUser.firstname} {currentUser.lastname}</strong> Profile
         </h3>
 
 
       </header>
 
       <Grid container justify="center" alignItems="center" direction="column">
-        <Avatar alt={currentUser.username} src={currentUser.profilePicture} className={classes.large} />
+        <Avatar alt={currentUser.username} src={baseUrl+currentUser.profilePicture} className={classes.large} />
 
         <UploadImagesMUI email={currentUser.email} user={currentUser} />
       </Grid>

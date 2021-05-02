@@ -59,6 +59,7 @@ import {
 const App = () => {
   // const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   // const [showAdminBoard, setShowAdminBoard] = useState(false);
+  const baseUrl = "http://localhost:8080/api/get/profilePicture/";
   const { user: currentUser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -148,11 +149,11 @@ const App = () => {
   return (
     <Router history={history}>
       <div>
-        <nav className="navbar navbar-expand navbar-light bg-warning bg-gradient">
-          <Link to={"/"} className="navbar-brand">
-            <HotelIcon fontSize="large" style={{ marginBottom: 10, color: 'white' }} /> <b style={{ fontSize: '36px',color: 'white' }}>Hotel</b>
-          </Link>
+        <nav className="navbar navbar-expand" style={{ padding: '0 16px', backgroundColor: "rgb(70, 34, 121)" }}>
           <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <HotelIcon style={{ fontSize: '36px', color: 'white', paddingBottom: '8px' }} /> <b style={{ fontSize: '24px', color: 'white' }}>Hotel</b>
+            </li>
             <li className="nav-item">
               <Link to={"/"} className="nav-link">
                 Home
@@ -180,8 +181,8 @@ const App = () => {
                     Rooms
                   </Link>
                 </NavDropdown.Item>
-                {currentUser && currentUser.roles.includes('moderator') &&<NavDropdown.Divider />}
-                {currentUser && currentUser.roles.includes('moderator') && <NavDropdown.Item >
+                {currentUser && currentUser.roles.includes('manager') && <NavDropdown.Divider />}
+                {currentUser && currentUser.roles.includes('manager') && <NavDropdown.Item >
                   <Link to={"/createRoom"} className="nav-link">
                     New Room
                   </Link>
@@ -210,12 +211,6 @@ const App = () => {
 
           {currentUser ? (
             <div className="navbar-nav ml-auto">
-              <Avatar alt="currentUser.username" src={currentUser.profilePicture} className={classes.large} />
-              <div style={{ margin: "5%" }}>
-                <b style={{ color: "white" }}>{currentUser.username}</b>
-              </div>
-
-
 
               <Button
                 ref={anchorRef}
@@ -223,7 +218,11 @@ const App = () => {
                 aria-haspopup="true"
                 onClick={handleToggle}
               >
-                <MenuIcon />
+                <Avatar alt="currentUser.username" src={baseUrl + currentUser.profilePicture} className={classes.large} />
+              <div style={{ margin: "5%" }}>
+                <b style={{ color: "white" }}>{currentUser.firstname}</b>
+              </div>
+              {/* <MenuIcon style={{ color: "white" }}/> */}
               </Button>
               <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                 {({ TransitionProps, placement }) => (

@@ -58,6 +58,15 @@ const AddBooking = (props) => {
           //   padding: '0 30px',
           //   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
         },
+        colorInherit: {
+          background: '#5cb85c',
+          color: 'white',
+        },
+        contained: {
+          '&:hover': {
+            backgroundColor: "#1e822a",
+         },
+        },
       },
     },
   });
@@ -324,7 +333,7 @@ const AddBooking = (props) => {
                 type="submit"
                 size="large"
                 name="getAvailableBut"
-                style={{ background: '#33FF8C', color: 'white' }} >
+                color="inherit" >
                 Get Available Room
             </Button>
             </ThemeProvider>

@@ -30,6 +30,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import SearchIcon from '@material-ui/icons/Search';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -44,11 +45,11 @@ const RoomsList = (props) => {
   const [rooms, setRooms] = useState([]);
   const [searchRoomNumber, setSearchRoomNumber] = useState("");
 
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('RoomNumber');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(9);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('RoomNumber');
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(9);
 
   //sweetalert
   const MySwal = withReactContent(Swal);
@@ -60,7 +61,7 @@ const RoomsList = (props) => {
         // Name of the rule
         head: {
           paddingLeft: '48px',
-          backgroundColor: "#FAD02C",
+          backgroundColor: "#3b5998",
           color: "white",
           width: '200px',
         },
@@ -76,6 +77,7 @@ const RoomsList = (props) => {
           // boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
         },
       },
+
     },
   });
 
@@ -146,7 +148,7 @@ const RoomsList = (props) => {
 
   const StyledTableCell = withStyles((theme) => ({
     head: {
-      backgroundColor: "#FAD02C",
+      backgroundColor: "#3b5998",
       color: theme.palette.common.white,
     },
     body: {
@@ -156,7 +158,7 @@ const RoomsList = (props) => {
 
   const StyledTableRow = withStyles((theme) => ({
     root: {
-      backgroundColor: "#E9EAEC",
+      backgroundColor: "white",
       color: "black"
     },
   }))(TableRow);
@@ -194,7 +196,7 @@ const RoomsList = (props) => {
       id: 'actions',
       label: 'Actions',
       minWidth: 100,
-      align: 'left',
+      align: 'right',
     },
   ];
 
@@ -235,7 +237,7 @@ const RoomsList = (props) => {
     return (
       <TableHead>
         <TableRow>
-          {currentUser && currentUser.roles.includes('moderator') && <StyledTableCell padding="checkbox">
+          {currentUser && currentUser.roles.includes('manager') && <StyledTableCell padding="checkbox">
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
@@ -244,7 +246,7 @@ const RoomsList = (props) => {
             />
           </StyledTableCell>}
           {columns.map((headCell) => (
-            currentUser && currentUser.roles.includes('moderator') ? (
+            currentUser && currentUser.roles.includes('manager') ? (
               <StyledTableCell
                 key={headCell.id}
                 align={headCell.align}
@@ -378,7 +380,7 @@ const RoomsList = (props) => {
       );
     }
 
-    currentUser && currentUser.roles.includes('moderator') && setSelected(newSelected);
+    currentUser && currentUser.roles.includes('manager') && setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -546,7 +548,7 @@ const RoomsList = (props) => {
 
         </Col>
 
-        {currentUser && currentUser.roles.includes('moderator') && <Col style={{ textAlign: "right" }}>
+        {currentUser && currentUser.roles.includes('manager') && <Col style={{ textAlign: "right" }}>
           <Button startIcon={<AddCircleIcon color="error" fontSize="large" />} href="/createRoom/" style={{ display: !currentUser ? "none" : null }} size="large">
             <h4 style={{ margin: 0 }}>New Room</h4>
           </Button></Col>}
@@ -568,13 +570,13 @@ const RoomsList = (props) => {
               type="button"
               onClick={findByRoomNumber}
             >
-              Search Room
+              <SearchIcon />Search Room
             </button>
           </Col>
         </Col>
       </Row>
       <Paper className={classes.paper} style={{ "marginTop": "3%" }}>
-        {currentUser && currentUser.roles.includes('moderator') && selected.length !== 0 && <EnhancedTableToolbar numSelected={selected.length} />}
+        {currentUser && currentUser.roles.includes('manager') && selected.length !== 0 && <EnhancedTableToolbar numSelected={selected.length} />}
         <TableContainer>
           <Table
             className={classes.table}
@@ -608,13 +610,13 @@ const RoomsList = (props) => {
                       key={row.id}
                       selected={isItemSelected}
                     >
-                      {currentUser && currentUser.roles.includes('moderator') && <StyledTableCell padding="checkbox">
+                      {currentUser && currentUser.roles.includes('manager') && <StyledTableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </StyledTableCell>}
-                      {currentUser && currentUser.roles.includes('moderator') ? (
+                      {currentUser && currentUser.roles.includes('manager') ? (
                         <StyledTableCell component="th" id={labelId} scope="row" padding="none">
                           {row.RoomNumber}
                         </StyledTableCell>
@@ -630,8 +632,9 @@ const RoomsList = (props) => {
                       <StyledTableCell align="right">{row.AdultsCapacity}</StyledTableCell>
                       <StyledTableCell align="right">{row.ChildrenCapacity}</StyledTableCell>
                       <StyledTableCell align="right">฿{row.Price.toFixed(2)}</StyledTableCell>
-                      {currentUser && currentUser.roles.includes('moderator') && <StyledTableCell align="left">{(<div>
+                      {currentUser && currentUser.roles.includes('manager') && <StyledTableCell align="right">{(<div>
                         <Button startIcon={<EditIcon fontSize="small" />} onClick={() => openRoom(row.id)} size="small" color="#90ADC6" variant="contained">
+                          Edit
                         </Button>
                       </div>)}</StyledTableCell>}
                     </StyledTableRow>

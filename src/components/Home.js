@@ -371,6 +371,8 @@ const Home = (props) => {
     },
     root: {
       minWidth: 340,
+      marginLeft: "16px",
+      marginRight: "16px",
     },
     bullet: {
       display: 'inline-block',
@@ -437,7 +439,7 @@ const Home = (props) => {
         className={clsx(classes.root)}
       >
 
-        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+        <Typography className={classes.title} variant="h6" id="tableTitle" component="div" style={{textAlign: "left"}}>
           <InputIcon /> Checking In Today
           </Typography>
 
@@ -453,7 +455,7 @@ const Home = (props) => {
         className={clsx(classes.root)}
       >
 
-        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+        <Typography className={classes.title} variant="h6" id="tableTitle" component="div" style={{textAlign: "left"}}>
           <InputIcon /> Checking Out Today
           </Typography>
 
@@ -573,9 +575,9 @@ const Home = (props) => {
 
 
   return (
-    <Container className="sheet padding-10mm" style={{ "textAlign": "center" }}>
+    <Container className="sheet padding-0mm" style={{ "textAlign": "center" }}>
       <Row>
-        <Image src="hotel_room.jpg" fluid />
+        <Image src="hotel_room.jpg" fluid style={{ width: "100%" }}/>
       </Row>
       <Row>
         <Col xk={6} style={{ "margin": "3% auto" }}>

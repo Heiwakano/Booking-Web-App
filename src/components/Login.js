@@ -101,7 +101,7 @@ const Login = (props) => {
               </div>
 
               <div className="form-group">
-                <Link to="/sendotp" className="nav-link">Reset password?</Link>
+                <Link to="/sendotp" className="reset-pass-link">Reset password?</Link>
               </div>
 
               <div className="form-group">

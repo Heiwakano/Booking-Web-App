@@ -8,11 +8,25 @@ import CheckButton from "react-validation/build/button";
 
 import { resetpassword } from "../actions/resetpassword";
 
+import { clearMessage } from "../actions/message";
+
+import Swal from 'sweetalert2';
+
 const required = (value) => {
   if (!value) {
     return (
       <div className="alert alert-danger" role="alert">
         This field is required!
+      </div>
+    );
+  }
+};
+
+const vpassword = (value) => {
+  if (value.length < 6 || value.length > 40) {
+    return (
+      <div className="alert alert-danger" role="alert">
+        The password must be between 6 and 40 characters.
       </div>
     );
   }
@@ -58,10 +72,17 @@ const ResetPassword = (props) => {
       dispatch(resetpassword(email, newpassword1, newpassword2, otp, time))
         .then(() => {
           setLoading(false);
-          props.history.push("/login");
+          dispatch(clearMessage());
+          Swal.fire(
+            'Saved!',
+            'Your password has been changed.',
+            'success'
+          )
+            .then(() => props.history.push("/login"));
         })
-        .catch(() => {
+        .catch((e) => {
           setLoading(false);
+          console.log(e);
         })
     }
     else {
@@ -88,7 +109,7 @@ const ResetPassword = (props) => {
                   name="username"
                   value={username}
                   readOnly
-                  
+
                 />
               </div>
               <div className="form-group">
@@ -99,7 +120,7 @@ const ResetPassword = (props) => {
                   name="newpass1"
                   value={newpassword1}
                   onChange={onChangeNewPass1}
-                  validations={[required]}
+                  validations={[required, vpassword]}
                 />
               </div>
               <div className="form-group">
@@ -110,7 +131,7 @@ const ResetPassword = (props) => {
                   name="newpass2"
                   value={newpassword2}
                   onChange={onChangeNewPass2}
-                  validations={[required]}
+                  validations={[required, vpassword]}
                 />
               </div>
 

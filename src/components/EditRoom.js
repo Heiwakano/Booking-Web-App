@@ -50,11 +50,20 @@ const EditRoom = props => {
           //   background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
           //   borderRadius: 3,
           //   border: 0,
-          //   color: 'white',
+            // color: 'green',
           //   height: 48,
           //   padding: '0 30px',
           //   boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
         },
+        colorInherit: {
+          background: '#5cb85c',
+          color: 'white',
+        },
+        contained: {
+          '&:hover': {
+            backgroundColor: "#1e822a",
+         },
+        }
       },
     },
   });
@@ -300,16 +309,16 @@ const EditRoom = props => {
             </Form.Row>
             <Form.Row style={{ textAlign: "left", marginLeft: "6%" }}>
 
-            {currentUser && currentUser.roles.includes('moderator') &&<ThemeProvider theme={theme}>
-                <Button variant="contained" type="submit" size="large" name="save" color="primary" >Save</Button>
+            {currentUser && currentUser.roles.includes('manager') &&<ThemeProvider theme={theme}>
+                <Button variant="contained" type="submit" size="large" name="save" color="inherit" >Save</Button>
               </ThemeProvider>}
 
-              {currentUser && currentUser.roles.includes('moderator') && <ThemeProvider theme={theme}>
+              {currentUser && currentUser.roles.includes('manager') && <ThemeProvider theme={theme}>
                 <Button variant="contained" size="large" onClick={deleteRoom} name="delete" color="secondary" >Delete</Button>
               </ThemeProvider>}
 
               <ThemeProvider theme={theme}>
-                <Button variant="contained" size="large" onClick={cancelEdit} name="Back" color="default" >Back</Button>
+                <Button variant="outlined" size="large" onClick={cancelEdit} name="Back" color="default" >Back</Button>
               </ThemeProvider>
 
             </Form.Row>
