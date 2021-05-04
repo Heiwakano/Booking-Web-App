@@ -584,7 +584,7 @@ const Home = (props) => {
           <Card className={classes.root} variant="outlined">
             <CardContent>
               <Typography variant="body2" component="p">
-                <Paper className={classes.paper}>
+           
                   <EnhancedTableToolbar1 />
                   <TableContainer>
                     <Table
@@ -661,7 +661,7 @@ const Home = (props) => {
                     onChangeRowsPerPage={handleChangeRowsPerPage1}
                     ActionsComponent={TablePaginationActions}
                   />
-                </Paper>
+              
               </Typography>
             </CardContent>
 
@@ -671,7 +671,7 @@ const Home = (props) => {
           <Card className={classes.root} variant="outlined">
             <CardContent>
               <Typography variant="body2" component="p">
-                <Paper className={classes.paper}>
+               
                   <EnhancedTableToolbar2 />
                   <TableContainer>
                     <Table
@@ -750,7 +750,7 @@ const Home = (props) => {
                     onChangeRowsPerPage={handleChangeRowsPerPage2}
                     ActionsComponent={TablePaginationActions}
                   />
-                </Paper>
+              
               </Typography>
             </CardContent>
           </Card>

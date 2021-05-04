@@ -152,30 +152,38 @@ const App = () => {
         <nav className="navbar navbar-expand" style={{ padding: '0 16px', backgroundColor: "rgb(70, 34, 121)" }}>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
-              <HotelIcon style={{ fontSize: '36px', color: 'white', paddingBottom: '8px' }} /> <b style={{ fontSize: '24px', color: 'white' }}>Hotel</b>
+              {currentUser ? <Link to={"/"} className="nav-link" style={{padding: '0px 8px 0px 0px'}}>
+                <HotelIcon style={{ fontSize: '36px', color: 'white', paddingBottom: '8px' }} /> <b style={{ fontSize: '24px', color: 'white' }}>Hotel</b>
+              </Link> 
+              : <Link to={"/login"} className="nav-link" style={{padding: '0px 8px 0px 0px'}}>
+                <HotelIcon style={{ fontSize: '36px', color: 'white', paddingBottom: '8px' }} /> <b style={{ fontSize: '24px', color: 'white' }}>Hotel</b>
+              </Link>}
+              
             </li>
             <li className="nav-item">
-              <Link to={"/"} className="nav-link">
+              {currentUser ? <Link to={"/"} className="nav-link">
                 Home
-              </Link>
+              </Link> :  <Link to={"/login"} className="nav-link">
+                Home
+              </Link>}
             </li>
             <li className="nav-item">
-              <NavDropdown title="Bookings" id="basic-nav-dropdown">
+              {currentUser && <NavDropdown title="Bookings" id="basic-nav-dropdown">
                 <NavDropdown.Item>
                   <Link to={"/bookings"} className="nav-link">
                     Bookings
                   </Link>
                 </NavDropdown.Item>
-                {currentUser && <NavDropdown.Divider />}
-                {currentUser && <NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item>
                   <Link to={"/createBooking"} className="nav-link">
                     New Booking
                   </Link>
-                </NavDropdown.Item>}
-              </NavDropdown>
+                </NavDropdown.Item>
+              </NavDropdown>}
             </li>
             <li className="nav-item">
-              <NavDropdown title="Rooms" id="basic-nav-dropdown">
+              {currentUser && <NavDropdown title="Rooms" id="basic-nav-dropdown">
                 <NavDropdown.Item >
                   <Link to={"/rooms"} className="nav-link">
                     Rooms
@@ -187,7 +195,7 @@ const App = () => {
                     New Room
                   </Link>
                 </NavDropdown.Item>}
-              </NavDropdown>
+              </NavDropdown>}
             </li>
 
             {/* {showModeratorBoard && (

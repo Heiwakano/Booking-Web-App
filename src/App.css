@@ -153,9 +153,12 @@ nav .navbar-nav li a {
 .button-booking {
   margin: 0 3% 3% 0;
 }
+.col-md-3 {
+  margin: auto 0;  
+}
 .col-md-2 {
   margin: auto 0;  
-  }
+}
 .dropdown-item:hover {
   background-color: rgb(175, 165, 189) !important;
 }
